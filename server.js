@@ -119,6 +119,8 @@ var SampleApp = function() {
         for (var r in self.routes) {
             self.app.get(r, self.routes[r]);
         }
+		
+		app.use('/static', express.static(__dirname + '/public'));
     };
 
 
