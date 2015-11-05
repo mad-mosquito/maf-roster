@@ -1,0 +1,44 @@
+#container {
+	width:600px;
+	height:400px;
+	background:#ddd;
+	margin-left:140px;
+	
+}
+
+.column_container {
+	width:250px;
+	height:500px;
+	background:#ccc;
+	float:left;
+	margin:5px;
+	float:left;
+}
+
+.header {
+	color:#fff;
+	background:#000;
+	height:50px;
+	line-height:48px;
+}
+
+.button {
+	float:right;
+	padding-right:10px;
+	padding-left:10px;
+	border: 1px solid #666;
+	box-sizing: border-box;
+}
+
+.button:hover{
+	background:#292;
+}
+
+.name {
+	float:left;
+	padding-left:10px;
+}
+
+.content {
+	
+}
