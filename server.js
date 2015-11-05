@@ -120,7 +120,7 @@ var SampleApp = function() {
             self.app.get(r, self.routes[r]);
         }
 		
-		app.use('/static', express.static(__dirname + '/public'));
+		self.app.use('/static', express.static(__dirname + '/public'));
     };
 
 
