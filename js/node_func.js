@@ -1,6 +1,6 @@
 var connected = false
 function socketConnect() {
-	socket = io.connect('http://192.168.1.106:3000');
+	socket = io.connect('http://node-alroster.rhcloud.com/:8080');
 		
 		
 		socket.on('config_data', function (data) {

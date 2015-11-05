@@ -135,6 +135,43 @@ var SampleApp = function() {
         // Create the express server and routes.
         self.initializeServer();
     };
+	
+	self.setupSocket = function() {
+		//self.io = require('socket.io')//.listen(self.app.listen(self.port))
+		
+		self.io.sockets.on('connection', function (socket) {
+			console.log('connection')
+    
+			socket.emit('config_data', data )	
+	
+			socket.on('get_roster_data', function(data) {
+				var roster_data_portion = {}
+				for (var i in data) {
+					// join 'room' for each roster column
+					socket.join(data[i])
+					console.log('Joined: ' + data[i])
+					roster_data_portion[data[i]] = roster_data[data[i]] || null
+				}
+				socket.emit('roster_data', roster_data_portion)
+			})
+			
+			socket.on('update_cell', function(data) {
+				// data.id (room name), data.date, data.property, data.value
+				
+				// update object stored in memory
+				if (roster_data[data.id]) {
+					// make date object if it doesn't exist
+					if (roster_data[data.id][data.date] == null) roster_data[data.id][data.date] = {}
+					roster_data[data.id][data.date][data.property] = data.value
+					//console.log(JSON.stringify(roster_data[data.id][data.date]))
+				}
+				
+				// send update to peers
+				console.log(data.id)
+				socket.to(data.id).emit('update_cell', data)
+			})
+		})
+	}
 
 
     /**
@@ -142,10 +179,15 @@ var SampleApp = function() {
      */
     self.start = function() {
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
+		self.io = require('socket.io').listen(self.app.listen(self.port));
+		
+		/*
+		self.io = require('socket.io').listen(self.app.listen(self.port, self.ipaddress, function() {
             console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
-        });
+        }));
+		*/
+		self.setupSocket();
     };
 
 };   /*  Sample Application.  */
@@ -158,4 +200,83 @@ var SampleApp = function() {
 var zapp = new SampleApp();
 zapp.initialize();
 zapp.start();
+
+/*  TEMP DATA  */
+var pilots = {"Top_Gun": "Top Gun", "Santa_Claus":"Santa Claus", "Bob_Marley":"Bob Marley", "John_Wayne":"John Wayne","R2D2":"R2D2", "Oscar_the_Grouch":"Oscar"}
+var options = { "&nbsp;":"","GA8":10, "C206":10, "C210":10, "OFFICE":6, "LEAVE":8, "SICK":8 }
+var data = {"pilots":pilots, "options":options}
+
+
+var roster_data = {
+	"Des_Vautier" : {
+		"name":"Des Vautier",
+		"startday":"Mon",
+		"_2015_9_29":{"duty_type":"GA8","roster_hours":6.5, "hours_logged":5.5},
+		"_2015_9_27":{"duty_type":"GA8","roster_hours":7.7, "hours_logged":8},
+		"_2015_9_30":{"duty_type":"GA8","roster_hours":10, "hours_logged":8},
+		"_2015_9_31":{"duty_type":"GA8","roster_hours":10, "hours_logged":8},
+		"_2015_10_3":{"duty_type":"GA8","roster_hours":10},
+		"_2015_10_4":{"duty_type":"GA8","roster_hours":10}
+	},
+	
+	"Top_Gun" : {
+		"name":"Top Gun",
+		"startday":"Tue",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8"},
+		"_2015_10_10":{"duty_type":"GA8"}
+	},
+	
+	"Santa_Claus" : {
+		"name":"Santa Claus",
+		"startday":"Wed",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
+	},
+	
+	"Bob_Marley" : {
+		"name":"Bob Marley",
+		"startday":"Thu",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
+	},
+	
+	"John_Wayne" : {
+		"name":"John Wayne",
+		"startday":"Fri",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
+	},
+	
+	"R2D2" : {
+		"name":"R2D2",
+		"startday":"Sat",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
+	},
+	
+	"Oscar_the_Grouch" : {
+		"name":"Oscar the Grouch",
+		"startday":"Sun",
+		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
+		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
+	},
+}
 
