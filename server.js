@@ -2,6 +2,11 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
+var mongo = require('./mongo')
+var db = mongo.initDatabase()
+//console.log(db)
+
+
 
 
 /**
@@ -66,6 +71,8 @@ var SampleApp = function() {
            process.exit(1);
         }
         console.log('%s: Node server stopped.', Date(Date.now()) );
+		console.log('Closing database...')
+		//mongo.closeDb(db);
     };
 
 
@@ -82,6 +89,8 @@ var SampleApp = function() {
         ].forEach(function(element, index, array) {
             process.on(element, function() { self.terminator(element); });
         });
+		
+		
     };
 
 
@@ -141,8 +150,8 @@ var SampleApp = function() {
 		
 		self.io.sockets.on('connection', function (socket) {
 			console.log('connection')
-    
-			socket.emit('config_data', data )	
+			
+			//socket.emit('config_data', data )	
 	
 			socket.on('get_roster_data', function(data) {
 				var roster_data_portion = {}
@@ -154,21 +163,55 @@ var SampleApp = function() {
 				}
 				socket.emit('roster_data', roster_data_portion)
 			})
+
+			socket.on('get_all_members', function(){
+				mongo.getAllMembers(function(d) { socket.emit('sent_all_members', d ) } )
+			})			
 			
-			socket.on('update_cell', function(data) {
-				// data.id (room name), data.date, data.property, data.value
-				
-				// update object stored in memory
-				if (roster_data[data.id]) {
-					// make date object if it doesn't exist
-					if (roster_data[data.id][data.date] == null) roster_data[data.id][data.date] = {}
-					roster_data[data.id][data.date][data.property] = data.value
-					//console.log(JSON.stringify(roster_data[data.id][data.date]))
-				}
+			socket.on('get_active_members', function(){
+				mongo.getActiveMembers(function(d) { socket.emit('sent_active_members', d ) } )
+			})
+			
+			socket.on('add_member', function(data){
+				console.log('Updated Member: ' + data.name)
+				mongo.updateMember(data)
+			})
+			
+			socket.on('delete_member', function(data) {
+				mongo.deleteMember(data)
+			})
+			
+			socket.on('get_lookup_data', function() {
+				mongo.getLookupData(function(d) { socket.emit('sent_lookup_data', d ) } )
+			})
+			
+			socket.on('update_lookup', function(data) {
+				mongo.updateLookup(data)
+			})
+			
+			socket.on('delete_lookup', function(data) {
+				mongo.deleteLookup(data)
+			})
+			
+			socket.on('update_data', function(data) {
+				mongo.updateData(data)
 				
 				// send update to peers
-				console.log(data.id)
-				socket.to(data.id).emit('update_cell', data)
+				console.log(data)
+				socket.to(data.name).emit('update_cell', data)
+			})
+			
+			socket.on('get_data_range', function(data) {
+				mongo.getDataRange(data, function(d){ socket.emit( 'sent_data_range', d ) } )
+				// join rooms
+				for (var n in data.members) {
+					socket.join(data.members[n])
+					console.log('Joined: ' + data.members[n])
+				}
+			})
+			
+			socket.on('get_date_data', function(data) { // return all data from a single date
+				mongo.getDateData(data, function(d) { socket.emit('sent_date_data', d )} )
 			})
 		})
 	}

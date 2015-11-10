@@ -1,9 +1,8 @@
-function addRosterColumn(id, data) {
-	
+function addRosterColumn(name, data) {
 	// header
 	var header = createDiv(null, 'header', null, null)
 	header_container.appendChild(header)
-	header.id = id
+	header.id = name
 	
 	m_right = function(){
 		a1 = this.parentElement
@@ -29,7 +28,7 @@ function addRosterColumn(id, data) {
 
 	remove = function() { removeColumn(this.parentElement.id) }
 			
-	header.appendChild(createDiv(data.name,'name', null, null))
+	header.appendChild(createDiv(name,'name', null, null))
 	header.appendChild(createDiv('X','button', null, remove))
 	header.appendChild(createDiv('>','button', null, m_right))
 	header.appendChild(createDiv('<','button', null, m_left))
@@ -48,18 +47,20 @@ function addRosterColumn(id, data) {
 	
 	var content = createDiv(null, 'content', null, null)
 	content_container.appendChild(content)
-	content.id = id + '_content'
+	content.id = name + '_content'
 	var c_table = document.createElement('table')
 	c_table.addEventListener('click', onTableClick)
 	content.appendChild(c_table)
 	
+	// insert rows into this members column
 	for (var i = 0; i < daysInView; i ++) {
-
 		var row = c_table.insertRow(-1)
+		for (var ii = 0; ii < 5; ii ++) row.insertCell(-1)
 		
-		if (data.startday == dateTable.rows[i].cells[1].innerHTML)
-			row.className = 'startday'
-			
+		if (days[members[name].startday] == dateTable.rows[i].cells[1].innerHTML)
+		row.className = 'startday'
+		
+		
 		if (dateTable.rows[i].cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
 		else if (dateTable.rows[i].cells[1].innerHTML == 'Sat') row.style.background = '#d2ecff';
 		else if (dateTable.rows[i].cells[1].innerHTML == 'Tue') row.style.background = '#ccc';
@@ -67,23 +68,23 @@ function addRosterColumn(id, data) {
 		else row.style.background = '#fff'
 		
 		if (dateTable.rows[i].id == today_id) row.style.backgroundColor = '#a4e1b4'
-		
-		for (var c = 0; c < 5; c ++) row.insertCell(-1)
-		
-		// fill in stored data
-		if (data[dateTable.rows[i].id]) {
-			var d = data[dateTable.rows[i].id]
-			row.cells[0].innerHTML = d.duty_type
-			row.cells[1].innerHTML = d.roster_hours || lookupRosterHours(d.duty_type)
-			row.cells[2].innerHTML = d.hours_logged || ''
-		}
-		
-		calculateTotals(row)
 	}
+			
+	// populate the data we received
+	for ( var i = 0; i < data.length; i ++ ) {
+		var index = document.getElementById(String(data[i].date)).rowIndex
+		c_table.rows[index].cells[0].innerHTML = data[i].duty_type || ''
+		if (data[i].duty_type) c_table.rows[index].cells[1].innerHTML = data[i].roster_hours || lookup[data[i].duty_type]['roster_hours'] || ''
+		c_table.rows[index].cells[2].innerHTML = data[i].hours_logged || ''
+	}	
 	
+	calculateTotalsLoop(c_table.rows[0], daysInView)
+
 	// adjust width to avoid wrap
 	header_container.style.width = header_container.childElementCount * 270 + 'px'
 	content_container.style.width = content_container.childElementCount * 270 + 'px'
+	
+	saveCookie()
 }
 
 function removeColumn(id) {
@@ -94,40 +95,49 @@ function removeColumn(id) {
 }
 
 function calculateTotalsLoop(row, num) {
-	console.log(num)
+	if (row.rowIndex + num > daysInView) num = daysInView - row.rowIndex
+	console.log('CALC ROWS: ', num)
 	for (var i = 0; i < num; i ++) calculateTotals(row.parentElement.rows[row.rowIndex + i])
 }
 
 function calculateTotals(row) {
 	var rowIndex = row.rowIndex
 	var table = row.parentElement
+	var duty_type = lookup[row.cells[0].innerHTML] || null
 
 	var todays_hours = parseFloat(row.cells[2].innerHTML) || parseFloat(row.cells[1].innerHTML) || 0
-		if (row.className == 'startday' || rowIndex == 0) row.cells[3].innerHTML = parseFloat(row.cells[2].innerHTML) || row.cells[1].innerHTML || ''
+	if (row.className == 'startday' || rowIndex == 0) row.cells[3].innerHTML = parseFloat(row.cells[2].innerHTML) || row.cells[1].innerHTML || ''
+	
+	else {
+		var prev = parseFloat(row.previousSibling.cells[3].innerHTML) || 0
 		
-		else {
-			var prev = parseFloat(row.previousSibling.cells[3].innerHTML) || 0
-			
-			if (prev + todays_hours > 0) row.cells[3].innerHTML = prev + todays_hours
-			else row.cells[3].innerHTML = ''
-		}
+		if (prev + todays_hours > 0) row.cells[3].innerHTML = prev + todays_hours
+		else row.cells[3].innerHTML = ''
+	}
+	
+	row.cells[3].style.color = parseFloat(row.cells[3].innerHTML) > 40 ? 'red' : 'black'
+	
+	// calculate rolling 90
+	todays_hours = parseFloat(row.cells[2].innerHTML) || 0 // set to logged hours
+	if (todays_hours == 0 && duty_type && duty_type['include_rolling'])
+		todays_hours = parseFloat(row.cells[1].innerHTML) || 0 // set to rostered hours
+		row.cells[4].added_today = todays_hours  // store what we added to R90 total this day
 		
-		// calculate rolling 90
-		todays_hours = parseFloat(row.cells[2].innerHTML) || 0 // don't add in rostered hours
-		if ( rowIndex > 0 ) {
-			// add yesterdays rolling 90
-			todays_hours += parseFloat(row.previousSibling.cells[4].innerHTML) || 0
-			
-			// subtract the hours from 14 days ago
-			if (rowIndex >= 14) todays_hours -= parseFloat(table.rows[rowIndex-14].cells[2].innerHTML) || 0
-		}
+	
+	
+	if ( rowIndex > 0 ) {
+		// add yesterdays rolling 90
+		todays_hours += parseFloat(row.previousSibling.cells[4].innerHTML) || 0
 		
-		if ( todays_hours > 0 ) row.cells[4].innerHTML = todays_hours
-		else row.cells[4].innerHTML = ''
-}
-
-function lookupRosterHours(dutyType) {
-	return options[dutyType]
+		// subtract the hours from 14 days ago
+		if (rowIndex >= 14) todays_hours -= table.rows[rowIndex-14].cells[4].added_today
+	}
+	
+	if ( todays_hours > 0 ) row.cells[4].innerHTML = todays_hours
+	
+	else row.cells[4].innerHTML = ''
+	
+	row.cells[4].style.color = todays_hours > 90 ? 'red' : 'black'
 }
 
 function onCellSelect(evt) {
@@ -136,8 +146,8 @@ function onCellSelect(evt) {
 	sendUpdateToSocket(cell)
 	cell.style.border = ''
 	var row = cell.parentElement
-	row.cells[1].innerHTML = lookupRosterHours(cell.innerHTML)
-	calculateTotalsLoop(row, 7)
+	row.cells[1].innerHTML = lookup[cell.innerHTML]['roster_hours']
+	calculateTotalsLoop(row, 14)
 }
 
 function onTableClick(evt) {
@@ -227,6 +237,7 @@ function swapsies() {
 		a2.style.left = ''
 		b1.style.left = ''
 		b2.style.left = ''
+		saveCookie()
 	}
 }
 

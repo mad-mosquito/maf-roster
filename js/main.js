@@ -1,4 +1,7 @@
-var options, pilots, scrolling;
+var scrolling;
+var selected_members = []
+var members = {}
+var lookup = {}
 var header_titles = ['duty_type', 'roster_hours', 'hours_logged']
 	
 window.onload = function() {
@@ -15,37 +18,45 @@ window.onload = function() {
 
 }
 
-function initSelectOptions() {
+function initSelectOptions(options) {
+	
+	// first one blank
+	options.unshift( { 'duty_type':'&nbsp;', 'roster_hours':'' } )
 	
 	for (var i in options) {
+		lookup[options[i].duty_type] = options[i]
 		var div = document.createElement('div')
-		div.innerHTML = i
+		div.innerHTML = options[i].duty_type
+		div.roster_hours = options[i].roster_hours
+		div.include_rolling = options[i].include_rolling
 		cell_select.appendChild(div)
 	}
 }
 
-function initSelectPilots() {
-	console.log(getCookie())
-	selected_pilots = getCookie().split(',')
+function initSelectMembers(data) {
+	
+	console.log('COOKIE: ' + getCookie())
+	selected_members = getCookie().split(',')
+	
 	var div = document.getElementById('select_columns')
 	document.getElementById('open_select_columns').addEventListener('click', function() {
 		div.style.display = div.style.display == 'none' ? 'block' : 'none'
 	})
 	
 	
-	for (var i in pilots) {
-		
+	for (var i in data) {
+		members[data[i].name] = data[i]
 		var check = document.createElement('input')
 		var label = document.createElement('label')
 		
 		check.type = 'checkbox'
-		check.id = i + '_checkbox'
+		check.id = data[i].name + '_checkbox'
 		label.appendChild(check)
 		
-		label.innerHTML += '  ' + pilots[i]
+		label.innerHTML += '  ' + data[i].name
 		div.appendChild(label)
 
-		if (selected_pilots.indexOf(i) != -1) label.childNodes[0].checked = true
+		if (selected_members.indexOf(data[i].name) != -1) label.childNodes[0].checked = true
 	}
 	
 	var buttn = document.createElement('button')
@@ -56,7 +67,7 @@ function initSelectPilots() {
 
 function updateColumns() {
 	var columns_to_add = []
-	for (var i in pilots) {
+	for (var i in members) {
 		if (document.getElementById(i + '_checkbox').checked) {
 			// checkbox is checked... do we need to add this column
 			if (document.getElementById(i) == null) columns_to_add.push(i)
@@ -66,20 +77,24 @@ function updateColumns() {
 		}
 	}
 	
-	if (columns_to_add.length) socket.emit('get_roster_data', columns_to_add)
+	if (columns_to_add.length) 
+		socket.emit('get_data_range', { 'members' : columns_to_add, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
 	document.getElementById('select_columns').style.display = 'none'
-	
-	saveCookie()
 }
 
-function saveCookie(cols) {
+function saveCookie() {
 	var checked_cols = []
-	for (var i in pilots) if (document.getElementById(i + '_checkbox').checked) checked_cols.push(i)
+	for (var i in members) if (document.getElementById(i + '_checkbox').checked) checked_cols.push(i)
+	
+	var cols = []
+	for (var i = 0; i < header_container.childNodes.length; i ++)
+		cols.push(header_container.childNodes[i].id)
+	
 	var exdays = 100
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+d.toUTCString();
-    document.cookie = 'columns_displayed' + "=" + checked_cols.join() + "; " + expires;
+    document.cookie = 'columns_displayed' + "=" + cols.join() + "; " + expires;
 }
 
 function getCookie() {
@@ -108,9 +123,4 @@ function updateScroll() {
 	header_container.style.left = window.pageXOffset *-1 + 'px'
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
-}
-
-function initRosterColumn() {
-	var title = document.createElement('div')
-	
 }
