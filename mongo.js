@@ -9,10 +9,12 @@ module.exports = {
 		var mongo_ip = process.env.OPENSHIFT_MONGODB_DB_HOST
 		var mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017
 		
-		if (typeof mongo_ip === "undefined") mongo_ip = '127.0.0.1'
-		//var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
-		var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/node'
-		console.log(mongo_url)
+		if (typeof mongo_ip === "undefined") {
+			mongo_ip = '127.0.0.1'
+			var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
+		} else 
+			var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/node'
+		
 		MongoClient.connect(mongo_url, function(err, db) {
 			
 			if(err) throw err;
@@ -90,9 +92,10 @@ module.exports = {
 	},
 
 	updateData: function(data) {
-		//var p = data.property
-		//var v = data.value
-		var update = { $set: { "data.property": "data.value" } }
+		var s = String(data.property)
+		var update = { "$set" : {} }
+		update.$set[data.property] = data.value
+		//var update = { $set: { [s]: data.value } }
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
 	},
 	
