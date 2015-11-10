@@ -26,7 +26,7 @@ module.exports = {
 			return db;
 		})
 	},
-/*
+
 	getActiveMembers: function (callback) {
 		collection_members.find( { active:true } ).toArray(function(err, docs) {
 			if( err ) throw err
@@ -88,7 +88,7 @@ module.exports = {
 			
 		}
 	},
-
+/*
 	updateData: function(data) {
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, 
 		{ $set:
@@ -98,7 +98,7 @@ module.exports = {
 			}
 		}, {upsert:true})
 	},
-	
+*/	
 	getDateData: function(data, callback) {
 		collection_data.find( { date:data } ).toArray(function(err, docs) {
 			if( err ) throw err
@@ -133,5 +133,5 @@ module.exports = {
 	closeDb: function (db) {
 		db.close()
 	}	
-*/	
+
 }
