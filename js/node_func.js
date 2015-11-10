@@ -29,10 +29,12 @@ function socketConnect() {
 		socket.on('update_cell', function (data) {
 			console.log('UPDATE CELL: ' + data)
 			if (document.getElementById(data.name)) {
-				var row = document.getElementById(data.name+'_content').childNodes[0].rows[document.getElementById(data.date).rowIndex]
-				row.cells[header_titles.indexOf(data.property)].innerHTML = data.value
-				row.cells[1].innerHTML = lookup[row.cells[0].innerHTML] || ''
-				calculateTotalsLoop(row, 14)
+					if (document.getElementById(data.date)) {
+					var row = document.getElementById(data.name+'_content').childNodes[0].rows[document.getElementById(data.date).rowIndex]
+					row.cells[header_titles.indexOf(data.property)].innerHTML = data.value
+					row.cells[1].innerHTML = lookup[row.cells[0].innerHTML].roster_hours || ''
+					calculateTotalsLoop(row, 14)
+				}
 			}
 		})
 

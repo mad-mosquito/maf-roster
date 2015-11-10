@@ -92,7 +92,6 @@ module.exports = {
 	},
 
 	updateData: function(data) {
-		var s = String(data.property)
 		var update = { "$set" : {} }
 		update.$set[data.property] = data.value
 		//var update = { $set: { [s]: data.value } }
