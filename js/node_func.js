@@ -21,7 +21,7 @@ function socketConnect() {
 		})
 		
 		socket.on('sent_data_range', function(data) {
-						
+			console.log(data)			
 			for (var i = 0; i < selected_members.length; i ++) {
 				addRosterColumn(selected_members[i], data[selected_members[i]])
 			}
