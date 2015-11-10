@@ -26,7 +26,7 @@ module.exports = {
 			return db;
 		})
 	},
-
+/*
 	getActiveMembers: function (callback) {
 		collection_members.find( { active:true } ).toArray(function(err, docs) {
 			if( err ) throw err
@@ -132,5 +132,6 @@ module.exports = {
 
 	closeDb: function (db) {
 		db.close()
-	}	  
+	}	
+*/	
 }
