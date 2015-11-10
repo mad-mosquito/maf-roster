@@ -1,4 +1,7 @@
 function addRosterColumn(name, data) {
+
+	if (!members[name]) return
+	
 	// header
 	var header = createDiv(null, 'header', null, null)
 	header_container.appendChild(header)

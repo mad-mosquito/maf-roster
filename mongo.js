@@ -88,17 +88,12 @@ module.exports = {
 			
 		}
 	},
-/*
+
 	updateData: function(data) {
-		collection_data.update( { name:data.name, date:parseInt(data.date) }, 
-		{ $set:
-			{
-			//[data.property] : data.value
-			data.property : data.value
-			}
-		}, {upsert:true})
+		var update = { $set: { data.property: data.value } }
+		collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
 	},
-*/	
+	
 	getDateData: function(data, callback) {
 		collection_data.find( { date:data } ).toArray(function(err, docs) {
 			if( err ) throw err
