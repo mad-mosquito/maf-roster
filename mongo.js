@@ -11,7 +11,7 @@ module.exports = {
 		
 		if (typeof mongo_ip === "undefined") mongo_ip = '127.0.0.1'
 		//var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
-		var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/roster_db'
+		var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/node'
 		console.log(mongo_url)
 		MongoClient.connect(mongo_url, function(err, db) {
 			
