@@ -10,7 +10,8 @@ module.exports = {
 		var mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017
 		
 		if (typeof mongo_ip === "undefined") mongo_ip = '127.0.0.1'
-		var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
+		//var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
+		var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/roster_db'
 		console.log(mongo_url)
 		MongoClient.connect(mongo_url, function(err, db) {
 			
@@ -20,25 +21,7 @@ module.exports = {
 			collection_data = db.collection('data')
 			collection_members = db.collection('members')
 			collection_lookup = db.collection('lookup')
-
-		/*
-				
-			// update or insert if not exist
-			var _name = 'ace10'
-			var _date = 151120
-			collection.update( { name:_name, date:_date }, //match name and date
-				{	name:_name, date:_date, duty_type:'GA8'	},
-				{ upsert:true }
-			)
-			
-			
-			// get results from date range matching name
-			collection.find( { name:_name, date: {$gt:151118, $lt:151120} } ).toArray(function(err, docs) {
-				console.dir(docs[0].name);
-				console.log(docs.length)
-				db.close()
-				
-			})*/	
+	
 			console.log('Mongo DB connected..')
 			return db;
 		})
