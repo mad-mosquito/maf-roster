@@ -93,7 +93,8 @@ module.exports = {
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, 
 		{ $set:
 			{
-			[data.property] : data.value
+			//[data.property] : data.value
+			data.property : data.value
 			}
 		}, {upsert:true})
 	},
