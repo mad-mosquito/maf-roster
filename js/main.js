@@ -66,19 +66,19 @@ function initSelectMembers(data) {
 }
 
 function updateColumns() {
-	var columns_to_add = []
+	selected_members = []
 	for (var i in members) {
 		if (document.getElementById(i + '_checkbox').checked) {
 			// checkbox is checked... do we need to add this column
-			if (document.getElementById(i) == null) columns_to_add.push(i)
+			if (document.getElementById(i) == null) selected_members.push(i)
 		} else {
 			// checkbox is NOT checked... do we need to remove this column
 			if (document.getElementById(i) != null) removeColumn(i)
 		}
 	}
 	
-	if (columns_to_add.length) 
-		socket.emit('get_data_range', { 'members' : columns_to_add, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
+	if (selected_members.length) 
+		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
 	document.getElementById('select_columns').style.display = 'none'
 }
 
