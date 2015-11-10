@@ -90,9 +90,9 @@ module.exports = {
 	},
 
 	updateData: function(data) {
-		var p = data.property
-		var v = data.value
-		var update = { $set: { [p]: v } }
+		//var p = data.property
+		//var v = data.value
+		var update = { $set: { "data.property": "data.value" } }
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
 	},
 	
