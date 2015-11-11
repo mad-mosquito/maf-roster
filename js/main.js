@@ -3,6 +3,7 @@ var selected_members = []
 var members = {}
 var lookup = {}
 var header_titles = ['duty_type', 'roster_hours', 'hours_logged']
+var programs = ['maf', 'laynha']
 	
 window.onload = function() {
 	socketConnect()
@@ -19,15 +20,20 @@ window.onload = function() {
 }
 
 function initSelectOptions(options) {
+	var str = '<span class="red">&#8592;</span><span class="yellow">&#8594;</span>'
+	// switch program
+	options.unshift( { 'duty_type':'<span class="switch">&#8644;</span><span class="switch" style="color:red">&#8644;</span>', 'swap' : true } )
+	//options.unshift( { 'duty_type':str, 'swap' : true } )
 	
 	// first one blank
-	options.unshift( { 'duty_type':'&nbsp;', 'roster_hours':'' } )
+	options.unshift( { 'duty_type':'&nbsp;'} )
 	
 	for (var i in options) {
 		lookup[options[i].duty_type] = options[i]
 		var div = document.createElement('div')
 		div.innerHTML = options[i].duty_type
-		div.roster_hours = options[i].roster_hours
+		div.roster_hours = options[i].roster_hours || ''
+		div.swap = options[i].swap || false
 		div.include_rolling = options[i].include_rolling
 		cell_select.appendChild(div)
 	}

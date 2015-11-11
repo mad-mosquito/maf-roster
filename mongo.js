@@ -94,6 +94,7 @@ module.exports = {
 	updateData: function(data) {
 		var update = { "$set" : {} }
 		update.$set[data.property] = data.value
+		if (data.program) update.$set["program"] = data.program
 		//var update = { $set: { [s]: data.value } }
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
 	},

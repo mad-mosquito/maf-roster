@@ -32,9 +32,9 @@ function addRosterColumn(name, data) {
 	remove = function() { removeColumn(this.parentElement.id) }
 			
 	header.appendChild(createDiv(name,'name', null, null))
-	header.appendChild(createDiv('X','button', null, remove))
-	header.appendChild(createDiv('>','button', null, m_right))
-	header.appendChild(createDiv('<','button', null, m_left))
+	header.appendChild(createDiv('&#x274c;','button', null, remove))
+	header.appendChild(createDiv('&#10097;','button', null, m_right))
+	header.appendChild(createDiv('&#10096;','button', null, m_left)) // <--
 	var h_table = document.createElement('table')
 	var row = h_table.insertRow(-1)
 	
@@ -54,6 +54,10 @@ function addRosterColumn(name, data) {
 	var c_table = document.createElement('table')
 	c_table.addEventListener('click', onTableClick)
 	content.appendChild(c_table)
+	
+	// set the default program (maf/laynha) 
+	// for this table
+	c_table.program = programs[ members[name].program ] 
 	
 	// insert rows into this members column
 	for (var i = 0; i < daysInView; i ++) {
@@ -76,8 +80,14 @@ function addRosterColumn(name, data) {
 	// populate the data we received
 	for ( var i = 0; i < data.length; i ++ ) {
 		var index = document.getElementById(String(data[i].date)).rowIndex
-		c_table.rows[index].cells[0].innerHTML = data[i].duty_type || ''
-		if (data[i].duty_type) c_table.rows[index].cells[1].innerHTML = data[i].roster_hours || lookup[data[i].duty_type]['roster_hours'] || ''
+		
+		// duty type
+		var dt_cell = c_table.rows[index].cells[0]
+		dt_cell.innerHTML = data[i].duty_type || ''
+		dt_cell.program = data[i].program || programs[members[name].program]
+		if (dt_cell.innerHTML == '&nbsp;' || !dt_cell.innerHTML.length) dt_cell.className = ''
+		else dt_cell.className = dt_cell.program
+		if (data[i].duty_type && lookup[data[i].duty_type]) c_table.rows[index].cells[1].innerHTML = data[i].roster_hours || lookup[data[i].duty_type]['roster_hours'] || ''
 		c_table.rows[index].cells[2].innerHTML = data[i].hours_logged || ''
 	}	
 	
@@ -144,17 +154,34 @@ function calculateTotals(row) {
 }
 
 function onCellSelect(evt) {
+	if (evt.target.id == 'cell_select') {
+		evt.target.parentNode.removeChild(cell_select)
+		return // don't handle click on the container
+	}
 	var cell = evt.target.parentNode.parentNode
-	cell.innerHTML = evt.target.innerHTML
+	
+	if (evt.target.swap) {
+		cell.className = cell.className == 'maf' ? 'laynha' : 'maf'
+		cell.program = cell.className
+		cell.removeChild(cell_select)
+		if (!cell.innerHTML.length || cell.innerHTML == '&nbsp;') cell.className = ''
+	
+	} else {
+		cell.innerHTML = evt.target.innerHTML == '&nbsp;' ? '' : evt.target.innerHTML  // set the duty_type (or blank)
+		if (!cell.innerHTML.length) cell.className = ''
+		else cell.className = cell.program || cell.parentNode.parentNode.program
+		var row = cell.parentElement
+		if (lookup[cell.innerHTML])
+			row.cells[1].innerHTML = lookup[cell.innerHTML]['roster_hours'] || ''
+		else row.cells[1].innerHTML = ''
+		calculateTotalsLoop(row, 14)	
+	}
+	
 	sendUpdateToSocket(cell)
 	cell.style.border = ''
-	var row = cell.parentElement
-	row.cells[1].innerHTML = lookup[cell.innerHTML]['roster_hours']
-	calculateTotalsLoop(row, 14)
 }
 
 function onTableClick(evt) {
-
 	// update changes to DFT8 duty || rostered hours
 	if (cell_input.style.display == 'block') {
 		cell_input.style.display = 'none'
@@ -185,6 +212,7 @@ function onTableClick(evt) {
 	}
 	
 	if (evt.target.cellIndex == 0) { // Duty Type
+		a = evt.target
 		evt.target.appendChild(cell_select)
 		cell_select.style.display = 'block'
 		cell_select.parentElement.style.border = "3px solid orange"
