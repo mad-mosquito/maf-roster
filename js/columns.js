@@ -155,15 +155,16 @@ function calculateTotals(row) {
 
 function onCellSelect(evt) {
 	if (evt.target.id == 'cell_select') {
-		evt.target.parentNode.removeChild(cell_select)
+		date_container.appendChild(cell_select)
 		return // don't handle click on the container
 	}
-	var cell = evt.target.parentNode.parentNode
 	
-	if (evt.target.swap) {
+	var cell = cell_select.parentNode
+	
+	if (evt.target.swap || evt.target.className == 'switch') {
 		cell.className = cell.className == 'maf' ? 'laynha' : 'maf'
 		cell.program = cell.className
-		cell.removeChild(cell_select)
+		date_container.appendChild(cell_select)
 		if (!cell.innerHTML.length || cell.innerHTML == '&nbsp;') cell.className = ''
 	
 	} else {
