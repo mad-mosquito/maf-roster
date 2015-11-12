@@ -58,6 +58,7 @@ function addRosterColumn(name, data) {
 	// set the default program (maf/laynha) 
 	// for this table
 	c_table.program = programs[ members[name].program ] 
+	console.log(c_table.program)
 	
 	// insert rows into this members column
 	for (var i = 0; i < daysInView; i ++) {
@@ -119,12 +120,12 @@ function calculateTotals(row) {
 	var duty_type = lookup[row.cells[0].innerHTML] || null
 
 	var todays_hours = parseFloat(row.cells[2].innerHTML) || parseFloat(row.cells[1].innerHTML) || 0
-	if (row.className == 'startday' || rowIndex == 0) row.cells[3].innerHTML = parseFloat(row.cells[2].innerHTML) || row.cells[1].innerHTML || ''
+	if (row.className == 'startday' || rowIndex == 0) row.cells[3].innerHTML = round(parseFloat(row.cells[2].innerHTML)) || round(row.cells[1].innerHTML) || ''
 	
 	else {
 		var prev = parseFloat(row.previousSibling.cells[3].innerHTML) || 0
 		
-		if (prev + todays_hours > 0) row.cells[3].innerHTML = prev + todays_hours
+		if (prev + todays_hours > 0) row.cells[3].innerHTML = round(prev + todays_hours)
 		else row.cells[3].innerHTML = ''
 	}
 	
@@ -146,11 +147,15 @@ function calculateTotals(row) {
 		if (rowIndex >= 14) todays_hours -= table.rows[rowIndex-14].cells[4].added_today
 	}
 	
-	if ( todays_hours > 0 ) row.cells[4].innerHTML = todays_hours
+	if ( todays_hours > 0 ) row.cells[4].innerHTML = round(todays_hours)
 	
 	else row.cells[4].innerHTML = ''
 	
 	row.cells[4].style.color = todays_hours > 90 ? 'red' : 'black'
+}
+
+function round(num) {
+	return Math.round( num * 10 ) / 10;
 }
 
 function onCellSelect(evt) {
@@ -170,7 +175,7 @@ function onCellSelect(evt) {
 	} else {
 		cell.innerHTML = evt.target.innerHTML == '&nbsp;' ? '' : evt.target.innerHTML  // set the duty_type (or blank)
 		if (!cell.innerHTML.length) cell.className = ''
-		else cell.className = cell.program || cell.parentNode.parentNode.program
+		else cell.className = cell.program || cell.parentNode.parentNode.parentNode.program
 		var row = cell.parentElement
 		if (lookup[cell.innerHTML])
 			row.cells[1].innerHTML = lookup[cell.innerHTML]['roster_hours'] || ''

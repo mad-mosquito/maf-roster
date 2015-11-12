@@ -13,7 +13,7 @@ window.onload = function() {
 	cell_input = document.getElementById('cell_input')
 	cell_select = document.getElementById('cell_select')
 	cell_select.addEventListener('click', onCellSelect)
-	
+	select_columns = document.getElementById('select_columns')
 	initScrollHandlers()
 	initDateColumn()
 
@@ -45,9 +45,12 @@ function initSelectMembers(data) {
 	selected_members = getCookie().split(',')
 	
 	var div = document.getElementById('select_columns')
-	document.getElementById('open_select_columns').addEventListener('click', function() {
-		div.style.display = div.style.display == 'none' ? 'block' : 'none'
-	})
+	//document.getElementById('open_select_columns').addEventListener('touchstart', function() {
+	//	div.style.display = div.style.display == 'none' ? 'block' : 'none'
+	//})
+	
+	maf_pilots = document.getElementById('maf_pilots').childNodes[0]
+	var laynha_pilots = document.getElementById('laynha_pilots').childNodes[0]
 	
 	
 	for (var i in data) {
@@ -60,15 +63,17 @@ function initSelectMembers(data) {
 		label.appendChild(check)
 		
 		label.innerHTML += '  ' + data[i].name
-		div.appendChild(label)
+		
+		if (data[i].program == 0) maf_pilots.appendChild(label)
+		else laynha_pilots.appendChild(label)
 
 		if (selected_members.indexOf(data[i].name) != -1) label.childNodes[0].checked = true
 	}
-	
+	/*
 	var buttn = document.createElement('button')
-	buttn.innerHTML = 'UPDATE'
+	buttn.innerHTML = 'Update'
 	div.appendChild(buttn)
-	buttn.addEventListener('click', updateColumns)
+	buttn.addEventListener('click', updateColumns)*/
 }
 
 function updateColumns() {
@@ -85,7 +90,7 @@ function updateColumns() {
 	
 	if (selected_members.length) 
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
-	document.getElementById('select_columns').style.display = 'none'
+	select_columns.style.display = 'none'
 }
 
 function saveCookie() {

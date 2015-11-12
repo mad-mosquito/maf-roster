@@ -3,6 +3,8 @@
 	margin:0;
 }
 
+body {cursor: pointer}
+
 table {
 	border-collapse: collapse;
 }
@@ -27,7 +29,17 @@ td {
 	z-index:100;
 	background:#fff;
 	top:0;left:0;
-	
+}
+
+.top_corner img {
+	height:100px;
+	margin-left:65px;
+}
+
+.top_corner:hover img{
+	margin-top:-5px;
+	margin-left:50px;
+	height:105px;
 }
 
 #header_container {
@@ -91,6 +103,7 @@ td {
 }
 
 #cell_select {
+	-moz-user-select: none;
 	position:absolute;
 	margin-left:60px;
 	margin-top:-20px;
@@ -149,71 +162,94 @@ td {
 }
 
 #select_columns {
-	background:white;
+	-moz-user-select: none;
+	background:#27496d;
 	position:fixed;
 	z-index:200;
-	left:50px;
-	top:50px;
-	border: 1px solid black;
+	width:150px;
+	left:120px;
+	top:20px;
+	border: 1px solid #27496d;
+	box-shadow: 2px 0px 2px rgba(44,44,44,0.6);
+	max-height:450px;
 }
 
 #select_columns label {
 	display:block;
-	-moz-user-select: none;
-	padding:10px;
+	font-size:16px;
+	background-color: #6496c8;
+  text-shadow: -1px 1px #417cb8;
+	padding-left:10px;
 }
 
 #select_columns label:hover {
-	background:#9f9
+	background-color: #346392;
+  text-shadow: -1px 1px #27496d;
 }
 
-#open_select_columns {
-	position:fixed;
-	z-index:200;
-	top:0;
-	left:0;
-	width:50px;
-	height:50px;
-	background:#f60;
-	font-size:40px;
-	font-weight: 800;
-	-moz-user-select: none;
-	text-align:center;
-	line-height: 50px;
-}
-
-#open_select_columns:hover {
-	background:#fc3;
+#select_columns label:active {
+	background-color: #27496d;
+  text-shadow: -1px 1px #193047;
 }
 
 #select_columns h1{
+	color: #fff;
 	font-size:16px;
-	padding:14px;
-	border-bottom: 1px solid black;
-	background:#a2bcd4;
+  text-shadow: -1px 1px #193047;
+	padding:5px 10px;
 }
 
-#select_columns button{
+.blue_button{
 	width:100%;
 	height:40px;
-	background:#a2bcd4;
+	color: #fff;
+	padding:5px;
+	line-height:30px;
+	box-sizing: border-box;
+	margin: 2px 0;
+	font-size:18px;
+	background-color: #6496c8;
+  text-shadow: -1px 1px #417cb8;
+  border: none;	
 }
 
-#select_columns button:hover{
-	background:#829cb4;;
+.blue_button span {
+	float:right;
 }
 
-.group_popout {
-	background:#ddd;
-	box-shadow: 2px 2px 2px rgba(44,44,44,0.6);
-	margin-bottom:5px;
-	padding:15px;
-	
+.blue_button:hover, .blue_button:focus{
+	background-color: #346392;
+  text-shadow: -1px 1px #27496d;
 }
 
-.group_popout:hover {
-	background:#567;
+.blue_button:active{
+	background-color: #27496d;
+  text-shadow: -1px 1px #193047;
 }
+
+.blue_button:hover .popout {
+	display:block ;
+}
+
+.popout {
+	display:none;
+	background:#27496d;	
+	position:fixed;
+	//left:268px;
+	margin-left:145px;
+	margin-top:-20px;
+	font-size:14px;
+	border: 1px solid #27496d;
+	box-shadow: 2px 0px 2px rgba(44,44,44,0.6);
+	max-height:450px;	
+	min-width:150px;
+}
+
+.popout span {
+	padding-left:20px;
+	float:none;
+}
+
 .arrow_box {
 	position: absolute;;
 	background: #88b7d5;

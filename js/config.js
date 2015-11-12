@@ -70,7 +70,7 @@ function connect() {
 	
 		if (location.href.indexOf('rhcloud') != -1 ) 
 			socket = io.connect('http://node-alroster.rhcloud.com:8000');
-		else socket = io.connect('localhost:8080');
+		else socket = io.connect('localhost:3000');
 		
 		
 	} catch (e) { return false }

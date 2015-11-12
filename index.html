@@ -19,19 +19,24 @@
 </head>
 
 <body>
-	<div id="pilots_available_popup" class="arrow_box" style="display:none"></div>
-	<div id="open_select_columns">i</div>
-	<div id="select_columns" style="display:none">
-		<h1>Select Columns to display</h1>
-		<div id="maf_pilots_parent" class="group_popout">MAF<div id="maf_pilots"></div></div>
-		<div id="laynha_pilots_parent" class="group_popout">Laynha<div id="laynha_pilots"></div></div>
-	</div>
+	<div id="pilots_available_popup" class="arrow_box" style="display:none"></div>	
+
 	<input type="text" id="cell_input" style = "display:none"/>
 	<div id="cell_select" style = "display:none"></div>
 	<div id="header_container"></div>
 	<div id="date_container"><table id="date_table"></table></div>
 	<div id="content_container"></div>
-	<div class="top_corner"></div>
+	<div class="top_corner" onclick="select_columns.style.display = select_columns.style.display == 'none' ? 'block' : 'none'" id="open_select_columns">
+		
+		<img src="pilot_dog.jpg">
+	</div>
+	
+	<div id="select_columns" style="display:none" >
+		<h1>Select Pilots</h1>
+		<div id="maf_pilots" onclick='' class="blue_button"><div class="popout"><span>MAF Pilots</span></div>MAF<span>&#9658;</span></div>
+		<div id="laynha_pilots" onclick='' class="blue_button"><div class="popout"><span>Laynha Pilots</span></div>Laynha<span>&#9658;</span></div>
+		<div class="blue_button" onclick="updateColumns()">Update</div>
+	</div>
 			
 </body>
 </html>
