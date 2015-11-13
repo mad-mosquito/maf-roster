@@ -141,5 +141,10 @@ function updateScroll() {
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
 	var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-	if (scrollTop == 0) addRowsTop(7)
+	if (scrollTop == 0 && !pending) addRowsTop(7)
+	
+	var docHeight = document.documentElement.clientHeight || document.body.clientHeight
+	var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+	if (docHeight + scrollTop == scrollHeight && !pending) addRowsBottom(7)
+	
 }

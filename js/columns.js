@@ -1,5 +1,5 @@
 function addRosterColumn(name, data) {
-
+	console.log(data)
 	if (!members[name]) return
 	
 	var c_table
