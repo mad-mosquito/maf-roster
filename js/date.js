@@ -94,7 +94,7 @@ function addRowsTop(num) {
 	
 	// correct scroll position
 	document.documentElement.scrollTop = document.body.scrollTop = 40 * num
-
+	daysInView += num
 	if (selected_members.length)
 		loading.style.display = 'block'
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(topdate_1)) })
