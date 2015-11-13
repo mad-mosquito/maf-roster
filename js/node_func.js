@@ -73,7 +73,8 @@ function sendUpdateToSocket(cell) {
 	data.property = header_titles[cell.cellIndex]
 	data.date = dateTable.rows[cell.parentElement.rowIndex].id
 	data.name = cell.parentElement.parentElement.parentElement.parentElement.id.replace('_content', '')
-	if (cell.program && cell.program != cell.parentNode.parentNode.parentNode.program)
+	//if (cell.program && cell.program != cell.parentNode.parentNode.parentNode.program)
+	if (cell.program)
 		data.program = cell.program
 	console.log(data)
 	socket.emit('update_data', data)
