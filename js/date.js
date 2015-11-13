@@ -61,6 +61,45 @@ function initDateColumn() {
 	})
 }
 
+function addRowsTop(num) {
+	if (!num) num = 7
+	
+	var topdate_1 = new Date()
+	topdate_1.setDate(topdate.getDate())
+	
+	for (var i = 0; i < num; i ++) {
+		topdate.setDate(topdate.getDate() - 1)
+		var row = dateTable.insertRow(0)
+		row.insertCell(-1).innerHTML = topdate.getDate() + ' ' + months[topdate.getMonth()]
+		row.insertCell(-1).innerHTML = days[topdate.getDay()]
+		row.id = dateToInteger(topdate)
+		
+		if (row.cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
+		else if (row.cells[1].innerHTML == 'Sat') row.style.background = '#d2ecff';
+		else if (row.cells[1].innerHTML == 'Tue') row.style.background = '#ccc';
+		else if (row.cells[1].innerHTML == 'Thu') row.style.background = '#ccc';
+		else row.style.background = '#fff'
+		
+		if (today_id == row.id) row.style.backgroundColor = '#a4e1b4'
+		
+		// insert rows into this members column
+		for (var r = 0; r < content_container.childElementCount; r ++) {
+			var m_row = content_container.childNodes[r].childNodes[0].insertRow(0)
+			for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
+			m_row.style.background = row.style.background
+			if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
+				m_row.className = 'startday'
+		}
+	}
+	
+	// correct scroll position
+	document.documentElement.scrollTop = document.body.scrollTop = 40 * num
+
+	if (selected_members.length)
+		loading.style.display = 'block'
+		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(topdate_1)) })
+}
+
 function dateToInteger(date) {
 	var yy = date.getFullYear()
 	var mm = date.getMonth()

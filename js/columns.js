@@ -2,83 +2,97 @@ function addRosterColumn(name, data) {
 
 	if (!members[name]) return
 	
-	// header
-	var header = createDiv(null, 'header', null, null)
-	header_container.appendChild(header)
-	header.id = name
-	
-	m_right = function(){
-		a1 = this.parentElement
-		a2 = document.getElementById(this.parentElement.id + '_content')
-		
-		if (a1.nextElementSibling){
-			b1 = a1.nextElementSibling
-			b2 = a2.nextElementSibling
-			readySetSwapsies(4,3)			
-		}
-	}		
-	
-	m_left = function(){
-		b1 = this.parentElement
-		b2 = document.getElementById(this.parentElement.id + '_content')
-		if (b1.previousElementSibling){
-			
-			a1 = b1.previousElementSibling
-			a2 = b2.previousElementSibling
-			readySetSwapsies(3,4)
-		}
-	}
+	var c_table
 
-	remove = function() { removeColumn(this.parentElement.id) }
+	if (! document.getElementById(name)) { // don't re-create column if it already exists!
+		
+		// header
+		var header = createDiv(null, 'header', null, null)
+		header_container.appendChild(header)
+		header.id = name
+		
+		m_right = function(){
+			a1 = this.parentElement
+			a2 = document.getElementById(this.parentElement.id + '_content')
 			
-	header.appendChild(createDiv(name,'name', null, null))
-	header.appendChild(createDiv('&#x274c;','button', null, remove))
-	header.appendChild(createDiv('&#10097;','button', null, m_right))
-	header.appendChild(createDiv('&#10096;','button', null, m_left)) // <--
-	var h_table = document.createElement('table')
-	var row = h_table.insertRow(-1)
-	
-	row.insertCell(-1).innerHTML = 'DUTY TYPE'
-	row.insertCell(-1).innerHTML = 'ROSTER HOURS'
-	row.insertCell(-1).innerHTML = 'DFT8 DUTY'
-	row.insertCell(-1).innerHTML = 'WEEK TOTAL'
-	row.insertCell(-1).innerHTML = 'ROLLING 90'
-	header.appendChild(h_table)
-	
-	
-	// content
-	
-	var content = createDiv(null, 'content', null, null)
-	content_container.appendChild(content)
-	content.id = name + '_content'
-	var c_table = document.createElement('table')
-	c_table.addEventListener('click', onTableClick)
-	content.appendChild(c_table)
-	
-	// set the default program (maf/laynha) 
-	// for this table
-	c_table.program = programs[ members[name].program ] 
-	console.log(c_table.program)
-	
-	// insert rows into this members column
-	for (var i = 0; i < daysInView; i ++) {
-		var row = c_table.insertRow(-1)
-		for (var ii = 0; ii < 5; ii ++) row.insertCell(-1)
+			if (a1.nextElementSibling){
+				b1 = a1.nextElementSibling
+				b2 = a2.nextElementSibling
+				readySetSwapsies(4,3)			
+			}
+		}		
 		
-		if (days[members[name].startday] == dateTable.rows[i].cells[1].innerHTML)
-		row.className = 'startday'
+		m_left = function(){
+			b1 = this.parentElement
+			b2 = document.getElementById(this.parentElement.id + '_content')
+			if (b1.previousElementSibling){
+				
+				a1 = b1.previousElementSibling
+				a2 = b2.previousElementSibling
+				readySetSwapsies(3,4)
+			}
+		}
+
+		remove = function() { removeColumn(this.parentElement.id) }
+				
+		header.appendChild(createDiv(name,'name', null, null))
+		header.appendChild(createDiv('&#x274c;','button', null, remove))
+		header.appendChild(createDiv('&#10097;','button', null, m_right))
+		header.appendChild(createDiv('&#10096;','button', null, m_left)) // <--
+		var h_table = document.createElement('table')
+		var row = h_table.insertRow(-1)
+		
+		row.insertCell(-1).innerHTML = 'DUTY TYPE'
+		row.insertCell(-1).innerHTML = 'ROSTER HOURS'
+		row.insertCell(-1).innerHTML = 'DFT8 DUTY'
+		row.insertCell(-1).innerHTML = 'WEEK TOTAL'
+		row.insertCell(-1).innerHTML = 'ROLLING 90'
+		header.appendChild(h_table)
 		
 		
-		if (dateTable.rows[i].cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
-		else if (dateTable.rows[i].cells[1].innerHTML == 'Sat') row.style.background = '#d2ecff';
-		else if (dateTable.rows[i].cells[1].innerHTML == 'Tue') row.style.background = '#ccc';
-		else if (dateTable.rows[i].cells[1].innerHTML == 'Thu') row.style.background = '#ccc';
-		else row.style.background = '#fff'
+		// content
 		
-		if (dateTable.rows[i].id == today_id) row.style.backgroundColor = '#a4e1b4'
+		var content = createDiv(null, 'content', null, null)
+		content_container.appendChild(content)
+		content.id = name + '_content'
+		c_table = document.createElement('table')
+		c_table.addEventListener('click', onTableClick)
+		content.appendChild(c_table)
+		
+		// set the default program (maf/laynha) 
+		// for this table
+		c_table.program = programs[ members[name].program ] 
+		console.log(c_table.program)
+		
+		// insert rows into this members column
+		for (var i = 0; i < daysInView; i ++) {
+			var row = c_table.insertRow(-1)
+			for (var ii = 0; ii < 5; ii ++) row.insertCell(-1)
+			
+			if (days[members[name].startday] == dateTable.rows[i].cells[1].innerHTML)
+			row.className = 'startday'
+			
+			
+			if (dateTable.rows[i].cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
+			else if (dateTable.rows[i].cells[1].innerHTML == 'Sat') row.style.background = '#d2ecff';
+			else if (dateTable.rows[i].cells[1].innerHTML == 'Tue') row.style.background = '#ccc';
+			else if (dateTable.rows[i].cells[1].innerHTML == 'Thu') row.style.background = '#ccc';
+			else row.style.background = '#fff'
+			
+			if (dateTable.rows[i].id == today_id) row.style.backgroundColor = '#a4e1b4'
+		}
+		
+		// adjust width to avoid wrap
+		header_container.style.width = header_container.childElementCount * 270 + 'px'
+		content_container.style.width = content_container.childElementCount * 270 + 'px'
+		
+		saveCookie()
 	}
 			
 	// populate the data we received
+	
+	if (!c_table) c_table = document.getElementById(name + '_content').childNodes[0]
+	
 	for ( var i = 0; i < data.length; i ++ ) {
 		var index = document.getElementById(String(data[i].date)).rowIndex
 		
@@ -93,12 +107,6 @@ function addRosterColumn(name, data) {
 	}	
 	
 	calculateTotalsLoop(c_table.rows[0], daysInView)
-
-	// adjust width to avoid wrap
-	header_container.style.width = header_container.childElementCount * 270 + 'px'
-	content_container.style.width = content_container.childElementCount * 270 + 'px'
-	
-	saveCookie()
 }
 
 function removeColumn(id) {

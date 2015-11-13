@@ -14,6 +14,7 @@ window.onload = function() {
 	cell_select = document.getElementById('cell_select')
 	cell_select.addEventListener('click', onCellSelect)
 	select_columns = document.getElementById('select_columns')
+	loading = document.getElementById('loading')
 	initScrollHandlers()
 	initDateColumn()
 
@@ -88,9 +89,14 @@ function updateColumns() {
 		}
 	}
 	
-	if (selected_members.length) 
+	if (selected_members.length) {
+		loading.style.display = 'block'
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
+	}
+	
 	select_columns.style.display = 'none'
+	
+	
 }
 
 function saveCookie() {
@@ -134,4 +140,6 @@ function updateScroll() {
 	header_container.style.left = window.pageXOffset *-1 + 'px'
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
+	var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+	if (scrollTop == 0) addRowsTop(7)
 }
