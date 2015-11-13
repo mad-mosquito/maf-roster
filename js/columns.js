@@ -87,7 +87,8 @@ function addRosterColumn(name, data) {
 		content_container.style.width = content_container.childElementCount * 270 + 'px'
 		
 		saveCookie()
-		document.documentElement.scrollTo(0,1160)
+		//document.documentElement.scrollTo(0,1160)
+		window.scrollTo(0,1160)
 	}
 			
 	// populate the data we received

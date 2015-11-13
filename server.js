@@ -138,12 +138,18 @@ var SampleApp = function() {
 		// New call to compress content
 		self.app.use(express.compress());
 		
+		var auth = express.basicAuth(function(user,pass) {
+			return 'pilot' === user && 'mafna' === pass;
+		});
+
+
 		// use static server
-		self.app.use(express.static(__dirname + '/', { maxAge: 86400000 })); // cache one-day
+		self.app.use('/', auth)
+		self.app.use('/', express.static(__dirname + '/', { maxAge: 86400000 })); // cache one-day
 		//self.app.use(express.static(__dirname + '/'));
 		
 		//self.auth = express.basicAuth('test', 'admin');
-		self.app.use(express.basicAuth('pilot', 'mafna'));
+		//self.app.use(express.basicAuth('pilot', 'mafna'));
 		
 		//self.app.get('/', function(req, res) {
 		//	res.send(__dirname/index.html)

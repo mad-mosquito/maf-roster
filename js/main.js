@@ -163,7 +163,7 @@ function updateScroll() {
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
 	
-	if (!pending) {
+	if (!pending && content_container.childElementCount) {
 		var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 		if (scrollTop < 840 ) addRowsTop(14, scrollTop)
 		else if (scrollTop > 1930) addRowsBottom(14)
