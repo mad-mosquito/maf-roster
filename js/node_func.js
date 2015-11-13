@@ -37,7 +37,7 @@ function socketConnect() {
 					if (lookup[row.cells[0].innerHTML])
 						row.cells[1].innerHTML = lookup[row.cells[0].innerHTML].roster_hours || ''
 					else row.cells[1].innerHTML = ''
-					row.cells[0].className = data.program || row.parentElement.program
+					row.cells[0].className = data.program || row.parentElement.parentElement.program
 					if (!row.cells[0].innerHTML.length || row.cells[0].innerHTML == '&nbsp') row.cells[0].className = ''
 					calculateTotalsLoop(row, 14)
 				}
