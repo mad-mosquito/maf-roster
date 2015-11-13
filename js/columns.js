@@ -87,6 +87,7 @@ function addRosterColumn(name, data) {
 		content_container.style.width = content_container.childElementCount * 270 + 'px'
 		
 		saveCookie()
+		document.documentElement.scrollTo(0,1160)
 	}
 			
 	// populate the data we received
@@ -199,12 +200,14 @@ function onTableClick(evt) {
 	// update changes to DFT8 duty || rostered hours
 	if (cell_input.style.display == 'block') {
 		cell_input.style.display = 'none'
-		var cell = cell_input.parentElement
-		var row = cell.parentElement
+		var cell = cell_input.parentNode
 		cell.style.border = ''
 		cell.innerHTML = parseFloat(cell_input.value) || ''
-		sendUpdateToSocket(cell)
-		calculateTotalsLoop(row, 14)
+		
+		if (cell_input.value != cell_input.placeholder) {
+			sendUpdateToSocket(cell)
+			calculateTotalsLoop(cell.parentNode, 14)
+		}
 	}
 	
 	// update changes to duty type

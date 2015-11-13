@@ -4,6 +4,7 @@ var members = {}
 var lookup = {}
 var header_titles = ['duty_type', 'roster_hours', 'hours_logged']
 var programs = ['maf', 'laynha']
+var pending = true;
 	
 window.onload = function() {
 	socketConnect()
@@ -18,6 +19,27 @@ window.onload = function() {
 	initScrollHandlers()
 	initDateColumn()
 
+}
+
+function onInputKeyPress(e) {
+	
+	// move focus down row
+	if (e.which == 13 || e.which == 40 || e.keyCode == 13 || e.keyCode == 40)
+		e.target.parentNode.parentNode.nextSibling.cells[e.target.parentNode.cellIndex].click()
+	
+	// move focus up row
+	if (e.which == 38 || e.keyCode == 38 )
+		e.target.parentNode.parentNode.previousSibling.cells[e.target.parentNode.cellIndex].click()
+	
+	// move focus left
+	if (e.which == 37 || e.keyCode == 37 )
+		e.target.parentNode.previousSibling.click()
+	
+	// move focus right
+	if (e.which == 39 || e.keyCode == 39 )
+		e.target.parentNode.nextSibling.click()
+
+	
 }
 
 function initSelectOptions(options) {
@@ -140,11 +162,10 @@ function updateScroll() {
 	header_container.style.left = window.pageXOffset *-1 + 'px'
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
-	var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-	if (scrollTop == 0 && !pending) addRowsTop(7)
 	
-	var docHeight = document.documentElement.clientHeight || document.body.clientHeight
-	var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-	if (docHeight + scrollTop == scrollHeight && !pending) addRowsBottom(7)
-	
+	if (!pending) {
+		var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+		if (scrollTop < 840 ) addRowsTop(14, scrollTop)
+		else if (scrollTop > 1930) addRowsBottom(14)
+	}
 }

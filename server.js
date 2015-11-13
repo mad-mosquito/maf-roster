@@ -114,6 +114,11 @@ var SampleApp = function() {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );
         };
+		
+		self.routes['/*'] = function(req, res) {
+            res.setHeader('Content-Type', 'text/html');
+            res.send(self.cache_get('/*') );
+        };
     };
 
 
@@ -125,12 +130,25 @@ var SampleApp = function() {
         //self.createRoutes();
         self.app = express.createServer();
 
-        //  Add handlers for the app (from the routes).
+        //Add handlers for the app (from the routes).
         //for (var r in self.routes) {
         //    self.app.get(r, self.routes[r]);
         //}
 		
-		self.app.use(express.static(__dirname + '/'));
+		// New call to compress content
+		self.app.use(express.compress());
+		
+		// use static server
+		self.app.use(express.static(__dirname + '/', { maxAge: 86400000 })); // cache one-day
+		//self.app.use(express.static(__dirname + '/'));
+		
+		//self.auth = express.basicAuth('test', 'admin');
+		self.app.use(express.basicAuth('pilot', 'mafna'));
+		
+		//self.app.get('/', function(req, res) {
+		//	res.send(__dirname/index.html)
+		//})
+
     };
 
 

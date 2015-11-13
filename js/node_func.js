@@ -25,6 +25,7 @@ function socketConnect() {
 				addRosterColumn(selected_members[i], data[selected_members[i]])
 			}
 			loading.style.display = 'none'
+			pending = false
 		})
 
 		socket.on('update_cell', function (data) {

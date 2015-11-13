@@ -1,9 +1,8 @@
 var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-var daysInView = 40;
+var daysInView = 80;
 var topdate, lastdate, today_id
 var pilots_available_requested_date, pilot_available_timeout
-var pending = false;
 
 
 function initDateColumn() {
@@ -12,8 +11,8 @@ function initDateColumn() {
 	topdate = new Date(today.valueOf())
 	lastdate = new Date(today.valueOf())
 	
-	topdate.setDate(topdate.getDate() -7)
-	lastdate.setDate(lastdate.getDate() -7)
+	topdate.setDate(topdate.getDate() - 35 )
+	lastdate.setDate(lastdate.getDate() - 35 )
 	
 	
 	today_id = dateToInteger(today)
@@ -62,16 +61,19 @@ function initDateColumn() {
 	})
 }
 
-function addRowsTop(num) {
-	pending = true;
+function addRowsTop(num, scrollTop) {
+	pending = true
 	if (!num) num = 7
-	
+	if (!scrollTop) scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 	var topdate_1 = new Date(topdate.valueOf())
+	lastdate.setDate(lastdate.getDate() - num)
 
 	
 	for (var i = 0; i < num; i ++) {
 		topdate.setDate(topdate.getDate() - 1)
-		var row = dateTable.insertRow(0)
+		dateTable.deleteRow(-1) // delete row from bottom
+		var row = dateTable.insertRow(0)  // add row at top
+		
 		row.insertCell(-1).innerHTML = topdate.getDate() + ' ' + months[topdate.getMonth()]
 		row.insertCell(-1).innerHTML = days[topdate.getDay()]
 		row.id = dateToInteger(topdate)
@@ -86,7 +88,8 @@ function addRowsTop(num) {
 		
 		// insert rows into this members column
 		for (var r = 0; r < content_container.childElementCount; r ++) {
-			var m_row = content_container.childNodes[r].childNodes[0].insertRow(0)
+			content_container.childNodes[r].childNodes[0].deleteRow(-1) // delete row
+			var m_row = content_container.childNodes[r].childNodes[0].insertRow(0)  // add row
 			for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
 			m_row.style.background = row.style.background
 			if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
@@ -95,25 +98,32 @@ function addRowsTop(num) {
 	}
 	
 	// correct scroll position
-	document.documentElement.scrollTop = document.body.scrollTop = 40 * num
+	document.documentElement.scrollTop = document.body.scrollTop = scrollTop + 40 * num
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
-	daysInView += num
+	
+	//daysInView += num
 	if (selected_members.length)
 		loading.style.display = 'block'
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(topdate_1)) })
 	
-	setTimeout(function() {pending = false}, 2000)	
+	// set column width
+	dateTable.rows[20].cells[0].style.width='80px'
+	dateTable.rows[20].cells[1].style.width='50px'
 }
 
-function addRowsBottom(num) {
-	pending = true;
+function addRowsBottom(num, scrollTop) {
+	pending = true
+	if (!scrollTop) scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 	if (!num) num = 7
+console.log(scrollTop)
+	topdate.setDate(topdate.getDate() + num )
 	
 	var lastdate_1 = new Date(lastdate.valueOf())
 	
 	for (var i = 0; i < num; i ++) {
 		
-		var row = dateTable.insertRow(-1)
+		dateTable.deleteRow(0) // remove row
+		var row = dateTable.insertRow(-1) // add row
 		row.insertCell(-1).innerHTML = lastdate.getDate() + ' ' + months[lastdate.getMonth()]
 		row.insertCell(-1).innerHTML = days[lastdate.getDay()]
 		row.id = dateToInteger(lastdate)
@@ -128,7 +138,8 @@ function addRowsBottom(num) {
 		
 		// insert rows into this members column
 		for (var r = 0; r < content_container.childElementCount; r ++) {
-			var m_row = content_container.childNodes[r].childNodes[0].insertRow(-1)
+			content_container.childNodes[r].childNodes[0].deleteRow(0) // remove row
+			var m_row = content_container.childNodes[r].childNodes[0].insertRow(-1) // add row
 			for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
 			m_row.style.background = row.style.background
 			if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
@@ -137,17 +148,19 @@ function addRowsBottom(num) {
 		
 		lastdate.setDate(lastdate.getDate() + 1)
 	}
-	
+	console.log(scrollTop)
 	// correct scroll position
-	//document.documentElement.scrollTop = document.body.scrollTop = 40 * num
-	//date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
+	document.documentElement.scrollTop = document.body.scrollTop = scrollTop - 40 * num
+	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	
-	daysInView += num
+	// set column width
+	dateTable.rows[20].cells[0].style.width='80px'
+	dateTable.rows[20].cells[1].style.width='50px'
+	
 	if (selected_members.length)
 		loading.style.display = 'block'
 		console.log('START:', dateToInteger(lastdate_1), 'END:', dateToInteger(lastdate))
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(lastdate_1)), "end":parseInt(dateToInteger(lastdate)) })
-	setTimeout(function() {pending = false}, 2000)	
 }
 
 function dateToInteger(date) {
