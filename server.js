@@ -139,7 +139,9 @@ var SampleApp = function() {
 		self.app.use(express.compress());
 		
 		var auth = express.basicAuth(function(user,pass) {
-			return 'pilot' === user && 'mafna' === pass;
+			if (user === 'pilot' && pass === 'mafna') return true
+			else if (user === 'laynha' && pass === 'laynha') return true
+			else return false
 		});
 
 
@@ -272,83 +274,4 @@ var SampleApp = function() {
 var zapp = new SampleApp();
 zapp.initialize();
 zapp.start();
-
-/*  TEMP DATA  */
-var pilots = {"Top_Gun": "Top Gun", "Santa_Claus":"Santa Claus", "Bob_Marley":"Bob Marley", "John_Wayne":"John Wayne","R2D2":"R2D2", "Oscar_the_Grouch":"Oscar"}
-var options = { "&nbsp;":"","GA8":10, "C206":10, "C210":10, "OFFICE":6, "LEAVE":8, "SICK":8 }
-var data = {"pilots":pilots, "options":options}
-
-
-var roster_data = {
-	"Des_Vautier" : {
-		"name":"Des Vautier",
-		"startday":"Mon",
-		"_2015_9_29":{"duty_type":"GA8","roster_hours":6.5, "hours_logged":5.5},
-		"_2015_9_27":{"duty_type":"GA8","roster_hours":7.7, "hours_logged":8},
-		"_2015_9_30":{"duty_type":"GA8","roster_hours":10, "hours_logged":8},
-		"_2015_9_31":{"duty_type":"GA8","roster_hours":10, "hours_logged":8},
-		"_2015_10_3":{"duty_type":"GA8","roster_hours":10},
-		"_2015_10_4":{"duty_type":"GA8","roster_hours":10}
-	},
-	
-	"Top_Gun" : {
-		"name":"Top Gun",
-		"startday":"Tue",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8"},
-		"_2015_10_10":{"duty_type":"GA8"}
-	},
-	
-	"Santa_Claus" : {
-		"name":"Santa Claus",
-		"startday":"Wed",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
-	},
-	
-	"Bob_Marley" : {
-		"name":"Bob Marley",
-		"startday":"Thu",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
-	},
-	
-	"John_Wayne" : {
-		"name":"John Wayne",
-		"startday":"Fri",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
-	},
-	
-	"R2D2" : {
-		"name":"R2D2",
-		"startday":"Sat",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
-	},
-	
-	"Oscar_the_Grouch" : {
-		"name":"Oscar the Grouch",
-		"startday":"Sun",
-		"_2015_10_6":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_7":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_8":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_9":{"duty_type":"GA8","hours_logged":8},
-		"_2015_10_10":{"duty_type":"GA8","hours_logged":8}
-	},
-}
 
