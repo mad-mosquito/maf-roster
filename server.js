@@ -3,6 +3,7 @@
 var express = require('express');
 var fs      = require('fs');
 var mongo = require('./mongo')
+var backup = require('./backup')
 var db = mongo.initDatabase()
 //console.log(db)
 
@@ -243,6 +244,22 @@ var SampleApp = function() {
 			
 			socket.on('get_date_data', function(data) { // return all data from a single date
 				mongo.getDateData(data, function(d) { socket.emit('sent_date_data', d )} )
+			})
+			
+			socket.on('backup', function(startDate, endDate) {
+				mongo.getAllMembers(function(m) {
+					data = {}
+					members = []
+					for (var i in m) members.push (m[i].name)
+					data.members = members
+					data.start = parseInt(startDate)
+					data.end = parseInt(endDate)
+					
+					mongo.getDataRange(data, function(d){ 
+						socket.emit('backup', backup.getCSV(startDate, endDate, members, d))
+					})
+					
+				})
 			})
 		})
 	}

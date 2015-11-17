@@ -89,6 +89,21 @@ function getMembers() {
 				fillRow(row, data[i])
 			}
 		}
+		
+		socket.on('backup', function(csv) {
+			
+			var element = document.createElement('a');
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
+			element.setAttribute('download', 'MAF_Roster.csv');
+			
+			element.style.display = 'none';
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		})
+		
 		insertMembersInputRow()
 	})
 }
@@ -176,6 +191,36 @@ function save(index) {
 	
 	return false
 }	
+
+function getCSV() {
+	var start = checkDateValue(document.getElementById('exportFrom').value) || null
+	var end = checkDateValue(document.getElementById('exportTo').value) || null
+	if (start == null || end == null) alert('Invalid date.  Please enter a valid date - dd/mm/yy')
+	
+	else  {// date should be valid
+		socket.emit('backup', start, end)
+		console.log('REQ: CSV data',start,end)
+	}
+}
+
+function checkDateValue(d) {
+	if (d.length != 8) return null
+	var dd = parseInt(d.substring(0,2))
+	var mm = parseInt(d.substring(3,5))
+	var yy = parseInt(d.substring(6,8))
+	
+	if (dd == null || mm == null || yy == null) return null
+	if (dd > 31) return null
+	if (mm > 12) return null
+	mm--
+	
+	dd = dd > 9 ? String(dd) : '0' + dd
+	mm = mm > 9 ? String(mm) : '0' + mm
+	yy = String(yy += 2000)
+	
+	return yy + mm + dd
+	
+}
 
 function checkMemberData(index) {
 	var savedata = {}

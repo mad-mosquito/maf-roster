@@ -37,7 +37,6 @@ module.exports = {
 	},
 	
 	getAllMembers: function (callback) {
-		console.log(typeof(callback))
 		collection_members.find( { } ).toArray(function(err, docs) {
 			if( err ) throw err
 			callback(docs)
@@ -89,6 +88,14 @@ module.exports = {
 			})(i)
 			
 		}
+	},
+	
+	getBackupData: function (start, end, callback) {
+		console.log(start,end)
+		collection_data.find( { date: { $gte:start, $lte:end } }, {_id:0} ).sort({date:1}).toArray(function(err, docs) {
+			if( err ) throw err
+			callback(docs)
+		})
 	},
 
 	updateData: function(data) {
