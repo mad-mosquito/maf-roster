@@ -97,16 +97,18 @@ function addRosterColumn(name, data) {
 	if (!c_table) c_table = document.getElementById(name + '_content').childNodes[0]
 	
 	for ( var i = 0; i < data.length; i ++ ) {
-		var index = document.getElementById(String(data[i].date)).rowIndex
-		
-		// duty type
-		var dt_cell = c_table.rows[index].cells[0]
-		dt_cell.innerHTML = data[i].duty_type || ''
-		dt_cell.program = data[i].program || programs[members[name].program]
-		if (dt_cell.innerHTML == '&nbsp;' || !dt_cell.innerHTML.length) dt_cell.className = ''
-		else dt_cell.className = dt_cell.program
-		if (data[i].duty_type && lookup[data[i].duty_type]) c_table.rows[index].cells[1].innerHTML = data[i].roster_hours || lookup[data[i].duty_type]['roster_hours'] || ''
-		c_table.rows[index].cells[2].innerHTML = data[i].hours_logged || ''
+		if (document.getElementById(String(data[i].date))) {
+			var index = document.getElementById(String(data[i].date)).rowIndex
+			
+			// duty type
+			var dt_cell = c_table.rows[index].cells[0]
+			dt_cell.innerHTML = data[i].duty_type || ''
+			dt_cell.program = data[i].program || programs[members[name].program]
+			if (dt_cell.innerHTML == '&nbsp;' || !dt_cell.innerHTML.length) dt_cell.className = ''
+			else dt_cell.className = dt_cell.program
+			if (data[i].duty_type && lookup[data[i].duty_type]) c_table.rows[index].cells[1].innerHTML = data[i].roster_hours || lookup[data[i].duty_type]['roster_hours'] || ''
+			c_table.rows[index].cells[2].innerHTML = data[i].hours_logged || ''
+		}
 	}	
 	
 	calculateTotalsLoop(c_table.rows[0], daysInView)
