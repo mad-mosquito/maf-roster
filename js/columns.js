@@ -112,6 +112,7 @@ function addRosterColumn(name, data) {
 }
 
 function removeColumn(id) {
+	socket.emit('leave_room', id)
 	document.getElementById(id + '_checkbox').checked = false
 	document.getElementById(id + '_content').remove()
 	document.getElementById(id).remove()

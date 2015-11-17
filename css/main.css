@@ -112,6 +112,30 @@ td {
 	padding:10px;
 }
 
+.load_more {
+	position:fixed;
+	z-index: 1000;
+	background:green;
+	color:white;
+	padding:4px 10px;
+	left:15px;
+}
+
+.load_more:hover {
+	background: #0B0;
+}
+
+#load_prev {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#load_next {
+	bottom:0;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
 #cell_input {
 	border:none;
 	height:35px;

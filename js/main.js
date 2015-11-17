@@ -4,7 +4,6 @@ var members = {}
 var lookup = {}
 var header_titles = ['duty_type', 'roster_hours', 'hours_logged']
 var programs = ['maf', 'laynha']
-var pending = true;
 	
 window.onload = function() {
 	socketConnect()
@@ -15,6 +14,8 @@ window.onload = function() {
 	cell_select = document.getElementById('cell_select')
 	cell_select.addEventListener('click', onCellSelect)
 	select_columns = document.getElementById('select_columns')
+	addTop = document.getElementById('load_prev')
+	addBottom = document.getElementById('load_next')
 	loading = document.getElementById('loading')
 	initScrollHandlers()
 	initDateColumn()
@@ -163,9 +164,16 @@ function updateScroll() {
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	scrolling = false;
 	
-	if (!pending && content_container.childElementCount) {
+	if (content_container.childElementCount) {
 		var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-		if (scrollTop < 840 ) addRowsTop(14, scrollTop)
-		else if (scrollTop > 1930) addRowsBottom(14)
+		if (scrollTop < 840 ) {
+			//addRowsTop(14, scrollTop)
+			addTop.style.display = 'block'
+		} else addTop.style.display = 'none'
+		
+		if (scrollTop > 1930) {
+			addBottom.style.display = 'block'
+			//addRowsBottom(14)
+		} else addBottom.style.display = 'none'
 	}
 }

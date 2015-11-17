@@ -62,7 +62,7 @@ function initDateColumn() {
 }
 
 function addRowsTop(num, scrollTop) {
-	pending = true
+	addTop.style.display = 'none'
 	if (!num) num = 7
 	if (!scrollTop) scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 	var topdate_1 = new Date(topdate.valueOf())
@@ -112,7 +112,7 @@ function addRowsTop(num, scrollTop) {
 }
 
 function addRowsBottom(num, scrollTop) {
-	pending = true
+	addBottom.style.display = 'none'
 	if (!scrollTop) scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 	if (!num) num = 7
 console.log(scrollTop)

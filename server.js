@@ -188,6 +188,11 @@ var SampleApp = function() {
 				}
 				socket.emit('roster_data', roster_data_portion)
 			})
+			
+			socket.on('leave_room', function(room) {
+				console.log('Unsubcribed: ', room)
+				socket.leave(room)
+			})
 
 			socket.on('get_all_members', function(){
 				mongo.getAllMembers(function(d) { socket.emit('sent_all_members', d ) } )
