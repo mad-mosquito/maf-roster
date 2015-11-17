@@ -101,20 +101,26 @@ function initSelectMembers(data) {
 }
 
 function updateColumns() {
-	selected_members = []
+	//selected_members = []
+	var newly_selected = []
+	
 	for (var i in members) {
 		if (document.getElementById(i + '_checkbox').checked) {
 			// checkbox is checked... do we need to add this column
-			if (document.getElementById(i) == null) selected_members.push(i)
+			if (selected_members.indexOf(i) == -1) {
+				selected_members.push(i)
+				newly_selected.push(i)
+				}
+			//if (document.getElementById(i) == null) 
 		} else {
 			// checkbox is NOT checked... do we need to remove this column
 			if (document.getElementById(i) != null) removeColumn(i)
 		}
 	}
 	
-	if (selected_members.length) {
+	if (newly_selected.length) {
 		loading.style.display = 'block'
-		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
+		socket.emit('get_data_range', { 'members' : newly_selected, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(lastdate)) })
 	}
 	
 	select_columns.style.display = 'none'

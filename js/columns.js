@@ -1,6 +1,7 @@
 function addRosterColumn(name, data) {
 	console.log(data)
 	if (!members[name]) return
+	if (!data) return
 	
 	var c_table
 
@@ -116,6 +117,7 @@ function removeColumn(id) {
 	document.getElementById(id + '_checkbox').checked = false
 	document.getElementById(id + '_content').remove()
 	document.getElementById(id).remove()
+	selected_members.splice(selected_members.indexOf(id), 1)
 	saveCookie()
 }
 
