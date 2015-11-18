@@ -5,10 +5,26 @@ var fs      = require('fs');
 var mongo = require('./mongo')
 var backup = require('./backup')
 var db = mongo.initDatabase()
-//console.log(db)
 
 
+backup.initNodeMailer(mongo)
+scheduleBackup()
 
+setTimeout(function(){backup.getBackup(mongo)},4000)
+
+function scheduleBackup() {
+	var d = new Date()
+	var hh = d.getUTCHours()
+	var delay = 0
+	if (hh < 18) delay = 18 - hh
+	else delay = 42 - hh
+	console.log('Backup scheduled for ' + delay + ' hours from now.')
+	delay = delay * 1000 * 60 * 60
+	setTimeout(function() {
+		backup.getBackup(mongo)
+		scheduleBackup()
+	}, delay)
+}
 
 /**
  *  Define the sample application.
@@ -260,6 +276,10 @@ var SampleApp = function() {
 					})
 					
 				})
+			})
+			
+			socket.on('get_date', function() {
+				socket.emit('sent_date', new Date())
 			})
 		})
 	}

@@ -1,5 +1,61 @@
 module.exports = {
 
+	initNodeMailer: function () {
+		self = this
+		transporter = require('nodemailer').createTransport({ 
+			service: 'gmail', 
+			auth:  { user: 'allakeevella@gmail.com', pass: 'C206C210GA8' }
+			},{ 
+			from: 'MAF Roster', headers: {} 
+			})
+		
+		//this.getBackup()
+		//setTimeout(this.getBackup(),4000)
+	},
+
+	getBackup: function(mongo) {
+	
+		var start_date = new Date()
+		var end_date = new Date()
+		start_date.setDate(start_date.getDate() - 60)
+		end_date.setDate(end_date.getDate() + 60)
+		var startDate = this.fromDate(start_date)
+		var endDate = this.fromDate(end_date)
+	
+		mongo.getAllMembers(function(m) {
+			data = {}
+			members = []
+			for (var i in m) members.push (m[i].name)
+			data.members = members
+			data.start = parseInt(startDate)
+			data.end = parseInt(endDate)
+			
+			mongo.getDataRange(data, function(d){ 
+				self.sendMail(self.getCSV(startDate, endDate, members, d), start_date, end_date)
+			})
+			
+		})
+	},
+	
+	sendMail: function ( data, start_date, end_date ) {
+		var todayDate = new Date()
+		transporter.sendMail({ 
+			to: 'skoonta@gmail.com', // changes this to al-ops@maf.org
+			subject: 'AL-Roster Backup, '+ self.dateToString(start_date) + ' to '+ self.dateToString(end_date), 
+			text: 'Backup created: ' + todayDate.toDateString(),
+			attachments: [ { 'filename': self.dateToFilename(todayDate), 'content': data} ]
+		}, function(err) {if(err) console.log(err);console.log('Backup Email Sent', self.dateToString(todayDate))})
+
+	},
+	
+	dateToString: function (date) {
+		return date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear()
+	},
+	
+	dateToFilename: function (date) {
+		return date.getFullYear() + '_' + (date.getMonth() +1 ) + '_' + date.getDate() + '.csv'
+	},
+
 	getCSV: function(start, end, members, data) {
 		var date = this.toDate(start)
 		var end_date = this.toDate(end)
@@ -58,10 +114,6 @@ module.exports = {
 		}
 		return csv
 		
-	},
-	
-	getMemberEntry: function(data) {
-	
 	},
 	
 	toDate: function(str) {

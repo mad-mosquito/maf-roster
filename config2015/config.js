@@ -104,6 +104,11 @@ function getMembers() {
 			document.body.removeChild(element);
 		})
 		
+		socket.on('sent_date', function(date) {
+			console.log(date); 
+			dd = date;
+		})
+		
 		insertMembersInputRow()
 	})
 }
