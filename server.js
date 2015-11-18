@@ -8,8 +8,8 @@ var backup = require('./backup')
 var db = mongo.initDatabase()
 
 
-backup.initNodeMailer(mongo)
-scheduleBackup()
+//backup.initNodeMailer(mongo)
+//scheduleBackup()
 
 setTimeout(function(){backup.getBackup(mongo)},30000)
 
