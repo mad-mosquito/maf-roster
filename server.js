@@ -1,5 +1,6 @@
 #!/bin/env node
 //  OpenShift sample Node application
+//  Log files @  $OPENSHIFT_LOG_DIR
 var express = require('express');
 var fs      = require('fs');
 var mongo = require('./mongo')
@@ -277,6 +278,8 @@ var SampleApp = function() {
 					
 				})
 			})
+			
+			socket.on('backup_now', function(){backup.getBackup(mongo)});
 			
 			socket.on('get_date', function() {
 				socket.emit('sent_date', new Date())
