@@ -142,13 +142,13 @@ function fillRow(row, data) {
 	row.cells[4].innerHTML = '<a href="#" style="display:none" onclick="return save(this.parentNode.parentNode.rowIndex - 1)">save</a>'
 	row.cells[5].innerHTML = '<a href="#" onclick="return deleteMember(this.parentNode.parentNode.rowIndex -1)"> X </a>'
 	
-	if (data.name.length) row.cells[0].innerHTML = data.name
+	
+	if (data.name.length) row.cells[0].innerHTML = '<input type="text" placeholder = "'+data.name+'" value="'+data.name+'"/>'
 	else {
 		row.cells[0].innerHTML = '<input type="text" placeholder = "Enter Name"/>'
-		row.cells[0].childNodes[0].addEventListener('focus', showSave)
 		row.cells[5].childNodes[0].style.display = 'none'
 	}
-	
+	row.cells[0].childNodes[0].addEventListener('focus', showSave)
 }
 
 function fillLookupRow(row, data) {
@@ -178,14 +178,15 @@ function save(index) {
 	var savedata = checkMemberData(index)
 	
 	if (savedata) {
+
 		if (socket) socket.emit('add_member', savedata)
 		
 		if (index +2 == table.rows.length) { // new row
-			table.rows[index+1].cells[0].innerHTML = savedata.name
+			table.rows[index+1].cells[0].innerHTML = '<input type="text" value="'+savedata.name+'"/>'
 			table.rows[index+1].cells[5].childNodes[0].style.display = 'block'		
 			insertMembersInputRow()
 		}
-		
+		table.rows[index+1].cells[0].childNodes[0].placeholder = savedata.name
 		table.rows[index+1].cells[4].childNodes[0].style.display='none'
 	}
 	
@@ -224,26 +225,29 @@ function checkDateValue(d) {
 
 function checkMemberData(index) {
 	var savedata = {}
-	if (index +2 == table.rows.length) { // new item
-		savedata.name = table.rows[index+1].cells[0].childNodes[0].value
-		if (! /^([a-zA-Z0-9 '_-]+)$/.test(savedata.name)) {
-			alert('Sorry, I can\'t pronounce that name!  Try omitting the special characters.')
-			return null
-		}
-		
-		if (savedata.name.length > 20) {
-			alert('Are we writing a novel here?  Maximum of 20 characters is allowed for the name.')
-			return null
-		}
-		
-		for (var i = 0; i < table.rows.length; i ++ )
-			if (table.rows[i].cells[0].innerHTML.localeCompare(savedata.name) == 0) {
-				alert('Name already exists')
-				return null
-			}
-			
-	} else savedata.name = table.rows[index+1].cells[0].innerHTML
 	
+	savedata.name = table.rows[index+1].cells[0].childNodes[0].value
+	if (! /^([a-zA-Z0-9 '_-]+)$/.test(savedata.name)) {
+		alert('Sorry, I can\'t pronounce that name!  Try omitting the special characters.')
+		return null
+	}
+	
+	if (savedata.name.length > 20) {
+		alert('Are we writing a novel here?  Maximum of 20 characters is allowed for the name.')
+		return null
+	}
+	
+	for (var i = 0; i < table.rows.length; i ++ )
+		if (table.rows[i].cells[0].innerHTML.localeCompare(savedata.name) == 0) {
+			alert('Name already exists')
+			return null
+		}
+		
+	if (index +2 < table.rows.length) { // existing member
+		if (table.rows[index+1].cells[0].childNodes[0].value
+			!= table.rows[index+1].cells[0].childNodes[0].placeholder)
+				savedata.old_name = table.rows[index+1].cells[0].childNodes[0].placeholder
+	}
 	
 	savedata.active = table.rows[index+1].cells[1].childNodes[0].checked
 	savedata.startday = table.rows[index+1].cells[2].childNodes[0].selectedIndex

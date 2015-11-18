@@ -44,9 +44,31 @@ module.exports = {
 	},
 	
 	updateMember: function (data) {
-		collection_members.update( { name:data.name }, //match name
-			data, { upsert:true }
-		)
+		
+		if (data.old_name) {
+			console.log(data)
+			collection_members.update( 
+				{ name:data.old_name }, //match name
+				data, 
+				{ upsert:true }
+			)
+			
+			//var update = { "$set" : {} }
+			//update.$set['name'] = data.value
+			//if (data.program) update.$set["program"] = data.program
+			//collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
+			
+			collection_data.update( 
+				{ name : data.old_name }, 
+				{ $set: { name : data.name }  },
+				{ multi : true }
+			)
+		
+		} else {
+			collection_members.update( { name:data.name }, //match name
+				data, { upsert:true }
+			)
+		}	
 	},
 	
 	deleteMember: function (data) {
@@ -102,7 +124,6 @@ module.exports = {
 		var update = { "$set" : {} }
 		update.$set[data.property] = data.value
 		if (data.program) update.$set["program"] = data.program
-		//var update = { $set: { [s]: data.value } }
 		collection_data.update( { name:data.name, date:parseInt(data.date) }, update, {upsert:true})
 	},
 	
