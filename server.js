@@ -10,7 +10,7 @@ var db = mongo.initDatabase()
 backup.initNodeMailer(mongo)
 scheduleBackup()
 
-setTimeout(function(){backup.getBackup(mongo)},4000)
+setTimeout(function(){backup.getBackup(mongo)},30000)
 
 function scheduleBackup() {
 	var d = new Date()
