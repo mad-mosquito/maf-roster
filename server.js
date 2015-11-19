@@ -9,9 +9,9 @@ var db = mongo.initDatabase()
 
 
 //backup.initNodeMailer(mongo)
-//scheduleBackup()
+scheduleBackup()
 
-setTimeout(function(){backup.getBackup(mongo)},30000)
+setTimeout(function(){backup.getBackup(mongo)},5000)
 
 function scheduleBackup() {
 	var d = new Date()
@@ -166,6 +166,7 @@ var SampleApp = function() {
 		// use static server
 		self.app.use('/', auth)
 		self.app.use('/', express.static(__dirname + '/', { maxAge: 86400000 })); // cache one-day
+		self.app.use(express.bodyParser());
 		//self.app.use(express.static(__dirname + '/'));
 		
 		//self.auth = express.basicAuth('test', 'admin');

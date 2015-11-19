@@ -1,20 +1,7 @@
 module.exports = {
 
-	initNodeMailer: function () {
-		self = this
-		transporter = require('nodemailer').createTransport({ 
-			service: 'gmail', 
-			auth:  { user: 'allakeevella@gmail.com', pass: 'C206C210GA8' }
-			},{ 
-			from: 'MAF Roster', headers: {} 
-			})
-		
-		//this.getBackup()
-		//setTimeout(this.getBackup(),4000)
-	},
-
 	getBackup: function(mongo) {
-	
+		self = this
 		var start_date = new Date()
 		var end_date = new Date()
 		start_date.setDate(start_date.getDate() - 60)
@@ -38,13 +25,23 @@ module.exports = {
 	},
 	
 	sendMail: function ( data, start_date, end_date ) {
+			
 		var todayDate = new Date()
-		transporter.sendMail({ 
-			to: 'skoonta@gmail.com', // changes this to al-ops@maf.org
-			subject: 'AL-Roster Backup, '+ self.dateToString(start_date) + ' to '+ self.dateToString(end_date), 
+		var mg = require('mailgun-js')( { apiKey:'key-cdb67e77e323d3cb148f9148e585ef10', domain: 'sandbox9c96d6eead734d33be3fb0d3b72dab70.mailgun.org' } )
+		var attch = new mg.Attachment({data: new Buffer(data,'utf-8'), filename: self.dateToFilename(todayDate)})
+			
+		var mailOptions = {
+			from: 'AL-Roster <al-ops@maf.org>',
+			to: 'Test <skoonta@gmail.com>',
+			subject: 'AL-Roster Backup, '+ self.dateToString(start_date) + ' to '+ self.dateToString(end_date),
 			text: 'Backup created: ' + todayDate.toDateString(),
-			attachments: [ { 'filename': self.dateToFilename(todayDate), 'content': data} ]
-		}, function(err) {if(err) console.log(err);console.log('Backup Email Sent', self.dateToString(todayDate))})
+			//html: '<b>Hello</b>', // html body,
+			attachment: attch
+		};
+		
+		mg.messages().send(mailOptions, function (err, info) {
+			console.log(info)
+		})
 
 	},
 	
