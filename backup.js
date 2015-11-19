@@ -32,6 +32,21 @@ module.exports = {
 			
 		var mailOptions = {
 			from: 'AL-Roster <al-ops@maf.org>',
+			to: 'AL-OPS <al-ops@maf.org>',
+			subject: 'AL-Roster Backup, '+ self.dateToString(start_date) + ' to '+ self.dateToString(end_date),
+			text: 'Backup created: ' + todayDate.toDateString(),
+			//html: '<b>Hello</b>', // html body,
+			attachment: attch
+		};
+		
+		mg.messages().send(mailOptions, function (err, info) {
+			console.log(info)
+		})
+		
+		// double up...
+		
+		var mailOptions = {
+			from: 'AL-Roster <al-ops@maf.org>',
 			to: 'Test <skoonta@gmail.com>',
 			subject: 'AL-Roster Backup, '+ self.dateToString(start_date) + ' to '+ self.dateToString(end_date),
 			text: 'Backup created: ' + todayDate.toDateString(),

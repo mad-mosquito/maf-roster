@@ -11,7 +11,7 @@ var db = mongo.initDatabase()
 //backup.initNodeMailer(mongo)
 scheduleBackup()
 
-setTimeout(function(){backup.getBackup(mongo)},5000)
+//setTimeout(function(){backup.getBackup(mongo)},5000)
 
 function scheduleBackup() {
 	var d = new Date()
