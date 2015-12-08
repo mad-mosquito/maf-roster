@@ -16,8 +16,10 @@ td {
 	max-height:40px;
 	box-sizing: border-box;
 	padding:5px;
-	font-size:14px;
+	font-size:13px;
 	overflow:hidden;
+	white-space:nowrap;
+	
 }
 
 
