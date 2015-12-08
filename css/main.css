@@ -18,8 +18,6 @@ td {
 	padding:5px;
 	font-size:13px;
 	overflow:hidden;
-	white-space:nowrap;
-	
 }
 
 
@@ -189,6 +187,7 @@ td {
 	width:50px;
 	padding:2px;
 	box-sizing:border-box;
+	white-space:nowrap;
 }
 
 .startday td{
