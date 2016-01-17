@@ -325,10 +325,12 @@ function checkLookupData(index) {
 	
 	
 	if (!lookupTable.rows[index+1].cells[1].childNodes[0].value.length) savedata.roster_hours = '';
-	else savedata.roster_hours = parseFloat(lookupTable.rows[index+1].cells[1].childNodes[0].value) 
-	if (!savedata.roster_hours) {
-		alert('Please enter a valid value for: Roster Hours')
-		return null;
+	else {
+		savedata.roster_hours = parseFloat(lookupTable.rows[index+1].cells[1].childNodes[0].value) 
+		if (!savedata.roster_hours) {
+			alert('Please enter a valid value for: Roster Hours')
+			return null;
+		}
 	}
 	
 	savedata.include_rolling = lookupTable.rows[index+1].cells[2].childNodes[0].checked
