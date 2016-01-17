@@ -324,7 +324,8 @@ function checkLookupData(index) {
 	} else savedata.duty_type = lookupTable.rows[index+1].cells[0].innerHTML
 	
 	
-	savedata.roster_hours = parseFloat(lookupTable.rows[index+1].cells[1].childNodes[0].value) 
+	if (!lookupTable.rows[index+1].cells[1].childNodes[0].value.length) savedata.roster_hours = '';
+	else savedata.roster_hours = parseFloat(lookupTable.rows[index+1].cells[1].childNodes[0].value) 
 	if (!savedata.roster_hours) {
 		alert('Please enter a valid value for: Roster Hours')
 		return null;
