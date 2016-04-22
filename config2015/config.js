@@ -21,7 +21,8 @@ window.onload = function() {
 	programSelect.add(opt1)
 	programSelect.add(opt2)
 	
-	showSave = function(e) { e.target.parentElement.parentElement.cells[4].childNodes[0].style.display = 'block' }
+	showSaveMember = function(e) { e.target.parentElement.parentElement.cells[4].childNodes[0].style.display = 'block' }
+	showSaveLookup = function(e) { e.target.parentElement.parentElement.cells[5].childNodes[0].style.display = 'block' }
 
 	if(connect()) {
 		getMembers()
@@ -133,15 +134,15 @@ function getLookupData() {
 function fillRow(row, data) {
 	
 	row.cells[1].innerHTML = '<input type="checkbox" style="margin:0"/>'
-	row.cells[1].childNodes[0].addEventListener('change', showSave)
+	row.cells[1].childNodes[0].addEventListener('change', showSaveMember)
 	if (data.active) row.cells[1].childNodes[0].checked = true
 	
 	row.cells[2].appendChild(daySelect.cloneNode(true))
-	row.cells[2].childNodes[0].addEventListener('change', showSave)
+	row.cells[2].childNodes[0].addEventListener('change', showSaveMember)
 	row.cells[2].childNodes[0].options.selectedIndex = data.startday
 	
 	row.cells[3].appendChild(programSelect.cloneNode(true))
-	row.cells[3].childNodes[0].addEventListener('change', showSave)
+	row.cells[3].childNodes[0].addEventListener('change', showSaveMember)
 	row.cells[3].childNodes[0].options.selectedIndex = data.program || 0
 	
 	row.cells[4].innerHTML = '<a href="#" style="display:none" onclick="return save(this.parentNode.parentNode.rowIndex - 1)">save</a>'
@@ -153,28 +154,32 @@ function fillRow(row, data) {
 		row.cells[0].innerHTML = '<input type="text" placeholder = "Enter Name"/>'
 		row.cells[5].childNodes[0].style.display = 'none'
 	}
-	row.cells[0].childNodes[0].addEventListener('focus', showSave)
+	row.cells[0].childNodes[0].addEventListener('focus', showSaveMember)
 }
 
 function fillLookupRow(row, data) {
 	row.cells[1].innerHTML = '<input type="text" style = "width:50px" value = "' + data.roster_hours + '"/>'
-	row.cells[1].childNodes[0].addEventListener('focus', showSave)
+	row.cells[1].childNodes[0].addEventListener('focus', showSaveLookup)
 	
 	row.cells[2].innerHTML = '<input type = "checkbox" style="margin:0"/>'
-	row.cells[2].childNodes[0].addEventListener('change', showSave)
+	row.cells[2].childNodes[0].addEventListener('change', showSaveLookup)
 	if (data.include_rolling) row.cells[2].childNodes[0].checked = true;
+
+	row.cells[3].innerHTML = '<input type = "checkbox" style="margin:0"/>'
+	row.cells[3].childNodes[0].addEventListener('change', showSaveLookup)
+	if (data.include_in_week) row.cells[3].childNodes[0].checked = true;
 	
-	row.cells[3].innerHTML = '<input type="text" style="width:50px" value = "' + data.availability + '"/>'
-	row.cells[3].childNodes[0].addEventListener('focus', showSave)
+	row.cells[4].innerHTML = '<input type="text" style="width:50px" value = "' + data.availability + '"/>'
+	row.cells[4].childNodes[0].addEventListener('focus', showSaveLookup)
 	
-	row.cells[4].innerHTML = '<a href="#" style="display:none" onclick="return saveLookup(this.parentNode.parentNode.rowIndex - 1)">save</a>'
-	row.cells[5].innerHTML = '<a href="#" onclick="return deleteLookup(this.parentNode.parentNode.rowIndex -1)"> X </a>'
+	row.cells[5].innerHTML = '<a href="#" style="display:none" onclick="return saveLookup(this.parentNode.parentNode.rowIndex - 1)">save</a>'
+	row.cells[6].innerHTML = '<a href="#" onclick="return deleteLookup(this.parentNode.parentNode.rowIndex -1)"> X </a>'
 	
 	if (data.duty_type.length) row.cells[0].innerHTML = data.duty_type
 	else {
 		row.cells[0].innerHTML = '<input type="text" style="width:100px" placeholder = "Enter Type"/>'
-		row.cells[0].childNodes[0].addEventListener('focus', showSave)
-		row.cells[5].childNodes[0].style.display = 'none'
+		row.cells[0].childNodes[0].addEventListener('focus', showSaveLookup)
+		row.cells[6].childNodes[0].style.display = 'none'
 	}
 }
 
@@ -280,11 +285,11 @@ function saveLookup(index) {
 		
 		if (index +2 == lookupTable.rows.length) { // new row
 			lookupTable.rows[index+1].cells[0].innerHTML = savedata.duty_type
-			lookupTable.rows[index+1].cells[5].childNodes[0].style.display = 'block'		
+			lookupTable.rows[index+1].cells[6].childNodes[0].style.display = 'block'		
 			insertLookupInputRow()
 		}
 		
-		lookupTable.rows[index+1].cells[4].childNodes[0].style.display='none'
+		lookupTable.rows[index+1].cells[5].childNodes[0].style.display='none'
 	}
 	
 	return false
@@ -334,9 +339,9 @@ function checkLookupData(index) {
 	}
 	
 	savedata.include_rolling = lookupTable.rows[index+1].cells[2].childNodes[0].checked
-	
+	savedata.include_in_week = lookupTable.rows[index+1].cells[3].childNodes[0].checked
 	savedata.availability = parseFloat(lookupTable.rows[index+1].cells[3].childNodes[0].value) || ''
 		
-	console.log(savedata)
+//	console.log(savedata)
 	return savedata
 }
