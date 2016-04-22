@@ -133,9 +133,12 @@ function calculateTotals(row) {
 	var rowIndex = row.rowIndex
 	var table = row.parentElement
 	var duty_type = lookup[row.cells[0].innerHTML] || null
-	var todays_hours = 0
+	
 
-	if (duty_type['include_in_week']) todays_hours = parseFloat(row.cells[2].innerHTML) || parseFloat(row.cells[1].innerHTML) || 0
+	var todays_hours = parseFloat(row.cells[2].innerHTML) || parseFloat(row.cells[1].innerHTML) || 0
+	if (duty_type && !duty_type['include_in_week']) todays_hours = 0
+
+
 	
 	if (row.className == 'startday' || rowIndex == 0) // START OF THE WEEK
 		row.cells[3].innerHTML = todays_hours//round(parseFloat(row.cells[2].innerHTML)) || round(row.cells[1].innerHTML) || ''
