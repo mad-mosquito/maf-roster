@@ -41,8 +41,8 @@ function insertMembersInputRow() {
 
 function insertLookupInputRow() {
 	var row = lookupTable.insertRow(-1)
-	for (var x = 0; x < 6; x ++) row.insertCell(-1)
-	fillLookupRow(row, {'duty_type':'', 'roster_hours':'', 'include_rolling':true, 'availability': ''})
+	for (var x = 0; x < 7; x ++) row.insertCell(-1)
+	fillLookupRow(row, {'duty_type':'', 'roster_hours':'', 'include_rolling':true, 'include_in_week':true, 'availability': ''})
 }
 
 function fill_dummy_data() {
@@ -55,7 +55,7 @@ function fill_dummy_data() {
 	
 	insertMembersInputRow()
 	
-	var dummy_lookup = {'duty_type' : 'GA8', 'roster_hours' : 10, 'include_rolling': true, 'availability' : .9 }
+	var dummy_lookup = {'duty_type' : 'GA8', 'roster_hours' : 10, 'include_rolling': true, 'include_in_week':true, 'availability' : .9 }
 	for (var i = 0; i < 10; i ++ ) {
 		row = lookupTable.insertRow(-1)
 		for (var x = 0; x < 6; x ++) row.insertCell(-1)
