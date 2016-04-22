@@ -59,6 +59,7 @@ function initSelectOptions(options) {
 		div.roster_hours = options[i].roster_hours || ''
 		div.swap = options[i].swap || false
 		div.include_rolling = options[i].include_rolling
+		div.include_in_week = options[i].include_in_week || true
 		cell_select.appendChild(div)
 	}
 }
