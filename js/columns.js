@@ -141,7 +141,7 @@ function calculateTotals(row) {
 
 	
 	if (row.className == 'startday' || rowIndex == 0) // START OF THE WEEK
-		row.cells[3].innerHTML = todays_hours//round(parseFloat(row.cells[2].innerHTML)) || round(row.cells[1].innerHTML) || ''
+		row.cells[3].innerHTML = todays_hours || ''//round(parseFloat(row.cells[2].innerHTML)) || round(row.cells[1].innerHTML) || ''
 	
 	else {
 		var prev = parseFloat(row.previousSibling.cells[3].innerHTML) || 0
