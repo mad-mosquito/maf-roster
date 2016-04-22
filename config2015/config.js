@@ -123,7 +123,7 @@ function getLookupData() {
 		for (i in data) {
 			if (data[i].duty_type) {
 				row = lookupTable.insertRow(-1)
-				for (var x = 0; x < 6; x ++) row.insertCell(-1)
+				for (var x = 0; x < 7; x ++) row.insertCell(-1)
 				fillLookupRow(row, data[i])
 			}
 		}
