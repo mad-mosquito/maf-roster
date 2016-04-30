@@ -340,7 +340,7 @@ function checkLookupData(index) {
 	
 	savedata.include_rolling = lookupTable.rows[index+1].cells[2].childNodes[0].checked
 	savedata.include_in_week = lookupTable.rows[index+1].cells[3].childNodes[0].checked
-	savedata.availability = parseFloat(lookupTable.rows[index+1].cells[3].childNodes[0].value) || ''
+	savedata.availability = parseFloat(lookupTable.rows[index+1].cells[4].childNodes[0].value) || ''
 		
 //	console.log(savedata)
 	return savedata
