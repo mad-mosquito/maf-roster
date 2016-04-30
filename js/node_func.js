@@ -6,6 +6,7 @@ function socketConnect() {
 		
 		socket.emit('get_lookup_data')
 		socket.on('sent_lookup_data', function(data) {
+			console.log("lookup:::" + data)
 			if (connecting) {
 				initSelectOptions(data)
 				socket.emit('get_active_members')
@@ -45,8 +46,6 @@ function socketConnect() {
 		})
 
 		socket.on('sent_date_data', function(data) {
-
-			console.log(data);
 
 			var m_pilots = 0
 			var l_pilots = 0
