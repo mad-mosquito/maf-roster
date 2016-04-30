@@ -8,7 +8,6 @@ function socketConnect() {
 		socket.on('sent_lookup_data', function(data) {
 
 			if (connecting) {
-				for (var i in data) console.log(JSON.parse(data[i]))
 				initSelectOptions(data)
 				socket.emit('get_active_members')
 			}

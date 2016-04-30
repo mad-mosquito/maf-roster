@@ -53,6 +53,7 @@ function initSelectOptions(options) {
 	options.unshift( { 'duty_type':'&nbsp;'} )
 	
 	for (var i in options) {
+		console.log(options[i])
 		lookup[options[i].duty_type] = options[i]
 		var div = document.createElement('div')
 		div.innerHTML = options[i].duty_type
