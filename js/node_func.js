@@ -46,6 +46,8 @@ function socketConnect() {
 
 		socket.on('sent_date_data', function(data) {
 
+			console.log(data)
+
 			var m_pilots = 0
 			var l_pilots = 0
 			for (var i = 0; i < data.length; i ++ ) {
