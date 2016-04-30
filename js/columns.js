@@ -1,5 +1,5 @@
 function addRosterColumn(name, data) {
-	console.log(data)
+	//console.log(data)
 	if (!members[name]) return
 	if (!data) return
 	
@@ -63,7 +63,7 @@ function addRosterColumn(name, data) {
 		// set the default program (maf/laynha) 
 		// for this table
 		c_table.program = programs[ members[name].program ] 
-		console.log(c_table.program)
+		//console.log(c_table.program)
 		
 		// insert rows into this members column
 		for (var i = 0; i < daysInView; i ++) {
@@ -125,7 +125,7 @@ function removeColumn(id) {
 
 function calculateTotalsLoop(row, num) {
 	if (row.rowIndex + num > daysInView) num = daysInView - row.rowIndex
-	console.log('CALC ROWS: ', num)
+	//console.log('CALC ROWS: ', num)
 	for (var i = 0; i < num; i ++) calculateTotals(row.parentElement.rows[row.rowIndex + i])
 }
 

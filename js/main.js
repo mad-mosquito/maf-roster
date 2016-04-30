@@ -53,7 +53,7 @@ function initSelectOptions(options) {
 	options.unshift( { 'duty_type':'&nbsp;'} )
 	
 	for (var i in options) {
-		console.log(options[i])
+		//console.log(options[i])
 		lookup[options[i].duty_type] = options[i]
 		var div = document.createElement('div')
 		div.innerHTML = options[i].duty_type
@@ -67,7 +67,7 @@ function initSelectOptions(options) {
 
 function initSelectMembers(data) {
 	
-	console.log('COOKIE: ' + getCookie())
+	//console.log('COOKIE: ' + getCookie())
 	selected_members = getCookie().split(',')
 	
 	var div = document.getElementById('select_columns')
