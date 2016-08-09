@@ -34,8 +34,8 @@ function initDateColumn() {
 	}
 	
 	// set column width
-	dateTable.rows[0].cells[0].style.width='80px'
-	dateTable.rows[0].cells[1].style.width='50px'
+	dateTable.rows[0].cells[0].style.width='70px'
+	dateTable.rows[0].cells[1].style.width='100px'
 	
 	
 	// listener for pilots available popup
@@ -87,13 +87,29 @@ function addRowsTop(num, scrollTop) {
 		if (today_id == row.id) row.style.backgroundColor = '#a4e1b4'
 		
 		// insert rows into this members column
+		
 		for (var r = 0; r < content_container.childElementCount; r ++) {
+			
 			content_container.childNodes[r].childNodes[0].deleteRow(-1) // delete row
 			var m_row = content_container.childNodes[r].childNodes[0].insertRow(0)  // add row
-			for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
-			m_row.style.background = row.style.background
-			if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
-				m_row.className = 'startday'
+			
+			
+			if (content_container.childNodes[r].id == "Notes_content") {
+				// notes
+				for (var ii = 0; ii < 3; ii ++) m_row.insertCell(-1) 
+				m_row.style.background = '#fff'
+				m_row.className = "notes_row"
+				
+			
+			}
+			
+			else {
+				// member
+				for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
+				m_row.style.background = row.style.background
+				if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
+					m_row.className = 'startday'				
+			}
 		}
 	}
 	
@@ -107,15 +123,16 @@ function addRowsTop(num, scrollTop) {
 		socket.emit('get_data_range', { 'members' : selected_members, "start":parseInt(dateToInteger(topdate)), "end":parseInt(dateToInteger(topdate_1)) })
 	
 	// set column width
-	dateTable.rows[20].cells[0].style.width='80px'
-	dateTable.rows[20].cells[1].style.width='50px'
+	dateTable.rows[20].cells[0].style.width='70px'
+	dateTable.rows[20].cells[1].style.width='100px'
+	
 }
 
 function addRowsBottom(num, scrollTop) {
 	addBottom.style.display = 'none'
 	if (!scrollTop) scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 	if (!num) num = 7
-console.log(scrollTop)
+
 	topdate.setDate(topdate.getDate() + num )
 	
 	var lastdate_1 = new Date(lastdate.valueOf())
@@ -136,14 +153,32 @@ console.log(scrollTop)
 		
 		if (today_id == row.id) row.style.backgroundColor = '#a4e1b4'
 		
-		// insert rows into this members column
+		// insert rows into member columns
 		for (var r = 0; r < content_container.childElementCount; r ++) {
 			content_container.childNodes[r].childNodes[0].deleteRow(0) // remove row
 			var m_row = content_container.childNodes[r].childNodes[0].insertRow(-1) // add row
-			for (var ii = 0; ii < 5; ii ++) m_row.insertCell(-1)
-			m_row.style.background = row.style.background
-			if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML)
-				m_row.className = 'startday'
+			
+			if (content_container.childNodes[r].id == "Notes_content") {
+				// notes
+				
+				m_row.style.background = '#fff'
+				m_row.className = "notes_row"
+				
+				for (var ii = 0; ii < 3; ii ++) {
+					m_row.insertCell(-1) 
+				}
+			
+			} else { 
+				m_row.style.background = row.style.background
+				
+				for (var ii = 0; ii < 5; ii ++) {
+					m_row.insertCell(-1)
+				}
+				
+				if (days[members[content_container.childNodes[r].id.replace('_content', '')].startday] == row.cells[1].innerHTML) {
+					m_row.className = 'startday'
+				}	
+			}				
 		}
 		
 		lastdate.setDate(lastdate.getDate() + 1)
@@ -154,8 +189,8 @@ console.log(scrollTop)
 	date_container.style.top = window.pageYOffset *-1 + 100 + 'px'
 	
 	// set column width
-	dateTable.rows[20].cells[0].style.width='80px'
-	dateTable.rows[20].cells[1].style.width='50px'
+	dateTable.rows[20].cells[0].style.width='70px'
+	dateTable.rows[20].cells[1].style.width='100px'
 	
 	if (selected_members.length)
 		loading.style.display = 'block'

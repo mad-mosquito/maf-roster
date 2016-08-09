@@ -23,6 +23,7 @@ module.exports = {
 			collection_data = db.collection('data')
 			collection_members = db.collection('members')
 			collection_lookup = db.collection('lookup')
+			collection_holidays = db.collection('holidays')
 	
 			console.log('Mongo DB connected..')
 			return db;
@@ -92,6 +93,23 @@ module.exports = {
 	
 	deleteLookup: function (data) {
 		collection_lookup.remove( { duty_type:data.duty_type } )
+	},
+	
+	getHolidays: function(callback) {
+		collection_holidays.find( { } ).sort({date : 1}).toArray(function(err, docs) {
+			if (err) throw err
+			callback(docs)
+		})
+	},
+	
+	saveHoliday: function(data) {
+		collection_holidays.update( { date: data.date },
+			data, {upsert:true }
+		)
+	},
+	
+	deleteHoliday: function(data) {
+		collection_holidays.remove( { date: data.date } )
 	},
 	
 	getDataRange: function (data, callback) {

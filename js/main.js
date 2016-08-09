@@ -1,9 +1,17 @@
+/*
+
+hightlight public holidays
+
+*/
+
 var scrolling;
 var selected_members = []
 var members = {}
 var lookup = {}
 var header_titles = ['duty_type', 'roster_hours', 'hours_logged']
 var programs = ['maf', 'laynha']
+var NOTES_ID = "Notes"
+var holidays
 	
 window.onload = function() {
 	socketConnect()
@@ -11,6 +19,8 @@ window.onload = function() {
 	header_container = document.getElementById('header_container')
 	date_container = document.getElementById('date_container')
 	cell_input = document.getElementById('cell_input')
+	notes_input = document.getElementById('notes_input')
+	notes_save_button = document.getElementById('notes_save_button')
 	cell_select = document.getElementById('cell_select')
 	cell_select.addEventListener('click', onCellSelect)
 	select_columns = document.getElementById('select_columns')
@@ -65,19 +75,23 @@ function initSelectOptions(options) {
 	}
 }
 
+function updateNotes(data) {
+	
+}
+
 function initSelectMembers(data) {
 	
-	//console.log('COOKIE: ' + getCookie())
 	selected_members = getCookie().split(',')
 	
 	var div = document.getElementById('select_columns')
-	//document.getElementById('open_select_columns').addEventListener('touchstart', function() {
-	//	div.style.display = div.style.display == 'none' ? 'block' : 'none'
-	//})
 	
 	maf_pilots = document.getElementById('maf_pilots').childNodes[0]
 	var laynha_pilots = document.getElementById('laynha_pilots').childNodes[0]
 	
+
+	// init Notes member
+	members["Notes"] = {}
+	document.getElementById("Notes_checkbox").checked = selected_members.indexOf("Notes") != -1 ? true : false
 	
 	for (var i in data) {
 		members[data[i].name] = data[i]
@@ -95,11 +109,6 @@ function initSelectMembers(data) {
 
 		if (selected_members.indexOf(data[i].name) != -1) label.childNodes[0].checked = true
 	}
-	/*
-	var buttn = document.createElement('button')
-	buttn.innerHTML = 'Update'
-	div.appendChild(buttn)
-	buttn.addEventListener('click', updateColumns)*/
 }
 
 function updateColumns() {
@@ -107,6 +116,7 @@ function updateColumns() {
 	var newly_selected = []
 	
 	for (var i in members) {
+		console.log(i);
 		if (document.getElementById(i + '_checkbox').checked) {
 			// checkbox is checked... do we need to add this column
 			if (selected_members.indexOf(i) == -1) {
@@ -119,6 +129,7 @@ function updateColumns() {
 			if (document.getElementById(i) != null) removeColumn(i)
 		}
 	}
+	
 	
 	if (newly_selected.length) {
 		loading.style.display = 'block'
@@ -154,7 +165,32 @@ function getCookie() {
         if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
     }
     return "";
-} 
+}
+
+function saveTabCookie(tab_selected) {
+	if ([0,1,2].indexOf(parseInt(tab_selected)) == -1) tab_selected = 0;
+	var exdays = 100
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+	document.cookie = 'tab_selected=' + tab_selected + "; " + expires;
+}
+
+function getTabCookie() {
+	var name='tab_selected='
+	var cookie = document.cookie.split(';');
+	for (var i=0; i < cookie.length; i ++) {
+		var c = cookie[i]
+		while (c.charAt(0)==' ') c = c.substring(1);
+		if (c.indexOf(name) == 0) {
+			tab_selected = c.split('=')[1]
+			return [0,1,2].indexOf(parseInt(tab_selected)) == -1 ? 0 : tab_selected
+		}
+	}
+	
+	return 0
+
+}
 
 function initScrollHandlers() {
 	

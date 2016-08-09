@@ -53,7 +53,8 @@ var SampleApp = function() {
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             //self.ipaddress = "127.0.0.1";
-            self.ipaddress = "192.168.1.106";
+            //self.ipaddress = "192.168.1.106";
+			self.ipaddress = "192.168.1.2";
         };
     };
 
@@ -244,6 +245,18 @@ var SampleApp = function() {
 				mongo.deleteLookup(data)
 			})
 			
+			socket.on('get_holidays', function() {
+				mongo.getHolidays(function(d) { socket.emit('sent_holidays', d) } )
+			})
+			
+			socket.on('save_holiday', function(data) {
+				mongo.saveHoliday(data)
+			})
+			
+			socket.on('delete_holiday', function(data) {
+				mongo.deleteHoliday(data)
+			})
+			
 			socket.on('update_data', function(data) {
 				mongo.updateData(data)
 				
@@ -255,8 +268,10 @@ var SampleApp = function() {
 				mongo.getDataRange(data, function(d){ socket.emit( 'sent_data_range', d ) } )
 				// join rooms
 				for (var n in data.members) {
-					socket.join(data.members[n])
-					console.log('Joined: ' + data.members[n])
+					if (data.members[n] != "Notes") {
+						socket.join(data.members[n])
+						//console.log('Joined: ' + data.members[n])
+					}
 				}
 			})
 			

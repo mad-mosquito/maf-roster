@@ -23,6 +23,8 @@
 	<div id="load_next" class="load_more" onclick="addRowsBottom(21)" style="display:none">Load more</div>
 	<div id="pilots_available_popup" class="arrow_box" style="display:none"></div>	
 	<input type="text" id="cell_input" style = "display:none" onkeypress="return onInputKeyPress(event)"/>
+	<textarea rows="2" id="notes_input" style = "display:none"></textarea>
+	<div id="notes_save_button" style="display:none">✔</div>
 	<div id="cell_select" style = "display:none"></div>
 	<div id="header_container"></div>
 	<div id="date_container"><table id="date_table"></table></div>
@@ -36,19 +38,9 @@
 		<h1>Select Pilots</h1>
 		<div id="maf_pilots" onclick='' class="blue_button"><div class="popout"><span>MAF Pilots</span></div>MAF<span>&#9658;</span></div>
 		<div id="laynha_pilots" onclick='' class="blue_button"><div class="popout"><span>Laynha Pilots</span></div>Laynha<span>&#9658;</span></div>
+		<label class="blue_button"><input type="checkbox" id="Notes_checkbox">&nbsp;&nbsp;Notes</label>
 		<div class="blue_button" onclick="updateColumns()">Update</div>
 	</div>
 			
 </body>
 </html>
-
-<!-- TODO
-
-*	Password
-*	Member groups
-*	Scrolling load
-*	Enter listener on input
-*	
-
-
--->

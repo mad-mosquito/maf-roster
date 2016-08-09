@@ -27,6 +27,7 @@ window.onload = function() {
 	if(connect()) {
 		getMembers()
 		getLookupData()
+		getHolidays()
 	}
 	
 	else fill_dummy_data()
@@ -71,7 +72,7 @@ function connect() {
 	
 		if (location.href.indexOf('rhcloud') != -1 ) 
 			socket = io.connect('http://node-alroster.rhcloud.com:8000');
-		else socket = io.connect('192.168.1.106:3000');
+		else socket = io.connect('192.168.1.2:3000');
 		
 		
 	} catch (e) { return false }
@@ -270,7 +271,12 @@ function checkMemberData(index) {
 function deleteMember(index) {
 	var r = confirm("Sure you want to delete this member? \n This action cannot be undone.")
 	if (r) { 
-		if (socket) socket.emit('delete_member', {'name': table.rows[index+1].cells[0].innerHTML } )
+		if (socket) {
+		
+			socket.emit('delete_member', {'name': table.rows[index+1].cells[0].childNodes[0].value} )
+		} else {
+			console.log('no connection')
+		}
 		table.rows[index+1].remove()
 	}
 	
@@ -306,6 +312,7 @@ function deleteLookup(index) {
 }
 
 function checkLookupData(index) {
+
 	
 	var savedata = {}
 	if (index +2 == lookupTable.rows.length) { // new item
@@ -344,4 +351,105 @@ function checkLookupData(index) {
 		
 //	console.log(savedata)
 	return savedata
+}
+
+function getHolidays() {
+	socket.emit('get_holidays')
+		
+	socket.on('sent_holidays', function(data) {
+		for (var i in data) {
+			insertHolidayRow(dateFromInt(data[i].date), data[i].occasion)
+		}
+	})
+}
+
+function saveHoliday() {
+	
+	// get and check date & ocassion
+	var date = checkHolidayDate(parseMyDate(document.getElementById("holiday_date").value))
+	if (date == null) return
+	var occasion = checkHolidayOccasion(document.getElementById("holiday_occasion").value)
+
+	// continue if valid values
+	if (occasion != null) {
+		
+		//add row
+		insertHolidayRow(getDateString(date), occasion)
+
+		//save to database
+		var savedata = {"date": dateToInteger(date), "occasion":occasion}
+		if (socket) socket.emit('save_holiday', savedata)
+		
+		// clear fields
+		document.getElementById("holiday_date").value = ""
+		document.getElementById("holiday_occasion").value = ""
+	}
+}
+
+function insertHolidayRow(date, occasion) {
+	var table = document.getElementById("publicHolidays")
+	row = table.insertRow(table.rows.length-1)
+	for (var i = 0; i < 3; i ++) row.insertCell()
+	row.cells[0].innerHTML = "<div>" + date + "</div>"
+	row.cells[1].innerHTML = "<div>" + occasion + "</div"
+	row.cells[2].innerHTML = '<a href="#" onclick="return deleteHoliday(this.parentNode.parentNode.rowIndex -1)"> X </a>'
+}
+
+function deleteHoliday(row) {
+	var table = document.getElementById("publicHolidays")
+
+	var date_obj = parseMyDate(table.rows[row+1].cells[0].childNodes[0].innerHTML)
+	var date_int = dateToInteger(date_obj)
+	socket.emit('delete_holiday', { "date": date_int })
+	table.rows[row+1].remove()
+	return false
+}
+
+function checkHolidayDate(date) {
+	if (isNaN(date)) {
+		alert("Please select a date for this holiday.")
+		return null
+	}
+	
+	return date
+}
+
+function checkHolidayOccasion(occasion) {
+
+	if (occasion.length == 0) {
+		alert('Please enter a name for this holiday.')
+		return null
+	}
+
+	if (! /^([a-zA-Z0-9 '_-]+)$/.test(occasion)) {
+		alert('Sorry, I can\'t pronounce that name!  Try omitting the special characters.')
+		return null
+	}
+	
+	if (occasion.length > 20) {
+		alert('Are we writing a novel here?  Maximum of 20 characters is allowed for the name.')
+		return null
+	}
+	
+	return occasion
+}
+
+function dateFromInt(int_date) {
+	date = new Date()
+	var yy = parseInt(int_date.substring(0,4))
+	var mm = parseInt(int_date.substring(4,6))
+	var dd = parseInt(int_date.substring(6,8))
+	
+	date.setYear(yy)
+	date.setMonth(mm)
+	date.setDate(dd)
+	
+	return getDateString(date)
+}
+
+function dateToInteger(date) {
+	var yy = date.getFullYear()
+	var mm = date.getMonth()
+	var dd = date.getDate()	
+	return String(yy) + (mm < 10 ? '0' + mm : String(mm)) + (dd < 10 ? '0' + dd : String(dd))
 }

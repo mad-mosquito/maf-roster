@@ -2,7 +2,13 @@ var connecting = true
 function socketConnect() {
 	if (location.href.indexOf('rhcloud') != -1 ) 
 		socket = io.connect('http://node-alroster.rhcloud.com:8000');
-	else socket = io.connect('192.168.1.106:3000');
+	else socket = io.connect('192.168.1.2:3000');
+	
+		socket.emit('get_holidays')
+		socket.on('sent_holidays', function(data) {
+			holidays = data
+			paintHolidays()
+		})
 		
 		socket.emit('get_lookup_data')
 		socket.on('sent_lookup_data', function(data) {
@@ -21,9 +27,16 @@ function socketConnect() {
 			}
 		})
 		
-		socket.on('sent_data_range', function(data) {			
+		socket.on('sent_data_range', function(data) {	
+		
+			if (holidays != null) paintHolidays()
+			
 			for (var i = 0; i < selected_members.length; i ++) {
-				addRosterColumn(selected_members[i], data[selected_members[i]])
+				if (selected_members[i] == NOTES_ID) {
+					addNotesColumn(data[selected_members[i]])
+				} else {
+					addRosterColumn(selected_members[i], data[selected_members[i]])
+				}
 			}
 			loading.style.display = 'none'
 			pending = false
