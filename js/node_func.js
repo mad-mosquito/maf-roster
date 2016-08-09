@@ -43,17 +43,26 @@ function socketConnect() {
 		})
 
 		socket.on('update_cell', function (data) {
-			console.log('UPDATE CELL: ' + data)
+			
+			console.log(data)
 			if (document.getElementById(data.name)) {
 					if (document.getElementById(data.date)) {
 					var row = document.getElementById(data.name+'_content').childNodes[0].rows[document.getElementById(data.date).rowIndex]
-					row.cells[header_titles.indexOf(data.property)].innerHTML = data.value
-					if (lookup[row.cells[0].innerHTML])
-						row.cells[1].innerHTML = lookup[row.cells[0].innerHTML].roster_hours || ''
-					else row.cells[1].innerHTML = ''
-					row.cells[0].className = data.program || row.parentElement.parentElement.program
-					if (!row.cells[0].innerHTML.length || row.cells[0].innerHTML == '&nbsp') row.cells[0].className = ''
-					calculateTotalsLoop(row, 14)
+					if (data.name == NOTES_ID) {
+						console.log("update notes")
+						if (data.property == "duty_type") row.cells[0].innerHTML = data.value || ''  // TAB A
+						if (data.property == "roster_hours") row.cells[1].innerHTML = data.value || ''  // TAB B
+						if (data.property == "hours_logged") row.cells[2].innerHTML = data.value || ''  // TAB C
+
+					} else {
+						row.cells[header_titles.indexOf(data.property)].innerHTML = data.value
+						if (lookup[row.cells[0].innerHTML])
+							row.cells[1].innerHTML = lookup[row.cells[0].innerHTML].roster_hours || ''
+						else row.cells[1].innerHTML = ''
+						row.cells[0].className = data.program || row.parentElement.parentElement.program
+						if (!row.cells[0].innerHTML.length || row.cells[0].innerHTML == '&nbsp') row.cells[0].className = ''
+						calculateTotalsLoop(row, 14)
+					}
 				}
 			}
 		})

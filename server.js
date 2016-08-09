@@ -268,11 +268,9 @@ var SampleApp = function() {
 				mongo.getDataRange(data, function(d){ socket.emit( 'sent_data_range', d ) } )
 				// join rooms
 				for (var n in data.members) {
-					if (data.members[n] != "Notes") {
-						socket.join(data.members[n])
-						//console.log('Joined: ' + data.members[n])
-					}
+					socket.join(data.members[n])
 				}
+				
 			})
 			
 			socket.on('get_date_data', function(data) { // return all data from a single date
