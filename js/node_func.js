@@ -28,8 +28,6 @@ function socketConnect() {
 		})
 		
 		socket.on('sent_data_range', function(data) {	
-		
-			if (holidays != null) paintHolidays()
 			
 			for (var i = 0; i < selected_members.length; i ++) {
 				if (selected_members[i] == NOTES_ID) {
@@ -39,6 +37,7 @@ function socketConnect() {
 				}
 			}
 			loading.style.display = 'none'
+			if (holidays != null) paintHolidays()
 			pending = false
 		})
 

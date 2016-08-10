@@ -71,7 +71,7 @@ function addRosterColumn(name, data) {
 			var row = c_table.insertRow(-1)
 			for (var ii = 0; ii < 5; ii ++) row.insertCell(-1)
 			
-			if (days[members[name].startday] == dateTable.rows[i].cells[1].innerHTML)
+			if (days[members[name].startday] == dateTable.rows[i].cells[1].weekday)
 			row.className = 'startday'
 			
 			
@@ -81,7 +81,7 @@ function addRosterColumn(name, data) {
 			else if (dateTable.rows[i].cells[1].innerHTML == 'Thu') row.style.background = '#ccc';
 			else row.style.background = '#fff'
 			
-			if (dateTable.rows[i].className == "holiday") row.style.backgroundColor = '#d7aad0'
+			//if (dateTable.rows[i].className == "holiday") row.style.backgroundColor = '#d7aad0'
 			if (dateTable.rows[i].id == today_id) row.style.backgroundColor = '#a4e1b4'
 		}
 		
@@ -249,6 +249,16 @@ function paintHolidays() {
 				if (dateRow != null) {
 					dateRow.className = 'holiday'
 					dateRow.cells[1].innerHTML = holidays[i].occasion
+
+					if (dateRow.id != today_id) {
+						var index = dateRow.rowIndex
+						for (var ii=0; ii < content_container.childElementCount; ii ++) {
+							var div = content_container.childNodes[ii]
+							if (div.id != "Notes_content") {
+								var table = div.childNodes[0].childNodes[0].rows[index].style.background = "#d7aad0"
+							}
+						}
+					}
 				}
 			}
 }

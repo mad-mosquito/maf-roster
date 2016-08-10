@@ -21,6 +21,7 @@ function initDateColumn() {
 		row = dateTable.insertRow(-1)
 		row.insertCell(-1).innerHTML = lastdate.getDate() + ' ' + months[lastdate.getMonth()]
 		row.insertCell(-1).innerHTML = days[lastdate.getDay()]
+		row.cells[1].weekday = days[lastdate.getDay()]
 		row.id = dateToInteger(lastdate)
 		
 		if (row.cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
@@ -76,6 +77,7 @@ function addRowsTop(num, scrollTop) {
 		
 		row.insertCell(-1).innerHTML = topdate.getDate() + ' ' + months[topdate.getMonth()]
 		row.insertCell(-1).innerHTML = days[topdate.getDay()]
+		row.cells[1].weekday = days[topdate.getDay()]
 		row.id = dateToInteger(topdate)
 		
 		if (row.cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';
@@ -143,6 +145,7 @@ function addRowsBottom(num, scrollTop) {
 		var row = dateTable.insertRow(-1) // add row
 		row.insertCell(-1).innerHTML = lastdate.getDate() + ' ' + months[lastdate.getMonth()]
 		row.insertCell(-1).innerHTML = days[lastdate.getDay()]
+		row.cells[1].weekday = days[lastdate.getDay()]
 		row.id = dateToInteger(lastdate)
 		
 		if (row.cells[1].innerHTML == 'Sun') row.style.background = '#a2bcd4';

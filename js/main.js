@@ -1,6 +1,9 @@
 /*
 
 hightlight public holidays
+	- todo: when new rows are added top or bottom
+		the date for public holidays is highlighted 
+		but not the whole row
 
 */
 
