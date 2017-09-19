@@ -5,7 +5,7 @@ var express = require('express');
 var fs      = require('fs');
 var mongo = require('./mongo')
 var backup = require('./backup')
-var db = mongo.initDatabase()
+//var db = mongo.initDatabase()
 
 
 //backup.initNodeMailer(mongo)
