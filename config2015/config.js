@@ -69,12 +69,14 @@ function fill_dummy_data() {
 function connect() {
 	
 	try {
-	
+	/*
 		if (location.href.indexOf('rhcloud') != -1 ) 
 			socket = io.connect('http://node-alroster.rhcloud.com:8000');
 		else socket = io.connect('192.168.1.2:3000');
-		
-		
+	*/
+
+		socket = io.connect('http://roster-roster.a3c1.starter-us-west-1.openshiftapps.com:8000');
+		console.log('socket connected')
 	} catch (e) { return false }
 	
 	return true
