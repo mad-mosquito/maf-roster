@@ -15,6 +15,8 @@ module.exports = {
 		console.log('MONGODB_PASSWORD', process.env.MONGODB_PASSWORD)
 		console.log('MONGODB_ADMIN_PASSWORD', process.env.MONGODB_ADMIN_PASSWORD)
 		console.log('MONGODB_DATABASE', process.env.MONGODB_DATABASE)
+		console.log('PATH', process.env.PATH)
+
 
 		
 		if (typeof mongo_ip === "undefined") {
