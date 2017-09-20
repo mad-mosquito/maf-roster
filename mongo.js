@@ -5,7 +5,7 @@ module.exports = {
 		var MongoClient = require('mongodb').MongoClient
 			, format = require('util').format;  
 			
-		
+/*		
 		var mongo_ip = process.env.OPENSHIFT_MONGODB_DB_HOST
 
 		console.log('*****', mongo_ip)
@@ -24,6 +24,8 @@ module.exports = {
 			var mongo_url = 'mongodb://' + mongo_ip + ':' + mongo_port + '/roster_db'
 		} else 
 			var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/node'
+*/
+		var mongo_url = 'mongodb://user7IN:VmssRcvIjOY2lrcv@mongodb/roster_db'
 		
 		MongoClient.connect(mongo_url, function(err, db) {
 			
@@ -38,6 +40,8 @@ module.exports = {
 			console.log('Mongo DB connected..')
 			return db;
 		})
+
+		console.log("Database ready...")
 	},
 
 	getActiveMembers: function (callback) {
