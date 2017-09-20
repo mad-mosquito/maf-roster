@@ -7,6 +7,8 @@ module.exports = {
 			
 		
 		var mongo_ip = process.env.OPENSHIFT_MONGODB_DB_HOST
+
+		console.log('*****', mongo_ip)
 		var mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017
 		
 		if (typeof mongo_ip === "undefined") {
