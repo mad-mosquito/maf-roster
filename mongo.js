@@ -10,6 +10,12 @@ module.exports = {
 
 		console.log('*****', mongo_ip)
 		var mongo_port = process.env.OPENSHIFT_MONGODB_DB_PORT || 27017
+
+		console.log('MONGODB_USER', process.env.MONGODB_USER)
+		console.log('MONGODB_PASSWORD', process.env.MONGODB_PASSWORD)
+		console.log('MONGODB_ADMIN_PASSWORD', process.env.MONGODB_ADMIN_PASSWORD)
+		console.log('MONGODB_DATABASE', process.env.MONGODB_DATABASE)
+
 		
 		if (typeof mongo_ip === "undefined") {
 			mongo_ip = '127.0.0.1'
