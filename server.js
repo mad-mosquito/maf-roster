@@ -56,6 +56,8 @@ var SampleApp = function() {
             //self.ipaddress = "192.168.1.106";
 			self.ipaddress = "192.168.1.2";
         };
+
+        console.log('SOCKET:', self.ipaddress,":", self.port);
     };
 
 
