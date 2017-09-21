@@ -310,7 +310,9 @@ var SampleApp = function() {
      */
     self.start = function() {
         //  Start the app on the specific interface (and port).
-		self.io = require('socket.io').listen(self.app.listen(self.port, self.ipaddress));
+		//self.io = require('socket.io').listen(self.app.listen(self.port, self.ipaddress));
+		self.io = require('socket.io').listen(self.app.listen(self.port));
+
 		
 		/*
 		self.io = require('socket.io').listen(self.app.listen(self.port, self.ipaddress, function() {
