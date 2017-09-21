@@ -219,6 +219,7 @@ var SampleApp = function() {
 			})
 
 			socket.on('get_all_members', function(){
+				console.log('socket request - get_all_members')
 				mongo.getAllMembers(function(d) { socket.emit('sent_all_members', d ) } )
 			})			
 			

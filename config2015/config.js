@@ -84,7 +84,7 @@ function connect() {
 
 function getMembers() {
 	socket.emit('get_all_members')
-		
+	console.log('Socket request sent')
 	socket.on('sent_all_members', function(data) {
 		for (i in data) {
 			if(data[i].name.length){
