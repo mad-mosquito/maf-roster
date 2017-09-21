@@ -75,7 +75,9 @@ function connect() {
 		else socket = io.connect('192.168.1.2:3000');
 	*/
 
-		socket = io.connect('http://roster-roster.a3c1.starter-us-west-1.openshiftapps.com:8080');
+		//socket = io.connect('http://roster-roster.a3c1.starter-us-west-1.openshiftapps.com:8080');
+		socket = io.connect(window.location.host);
+		
 		console.log('socket connected')
 	} catch (e) { return false }
 	
