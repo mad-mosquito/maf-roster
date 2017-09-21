@@ -1,9 +1,11 @@
 var connecting = true
 function socketConnect() {
+	/*
 	if (location.href.indexOf('rhcloud') != -1 ) 
 		socket = io.connect('http://node-alroster.rhcloud.com:8000');
 	else socket = io.connect('192.168.1.2:3000');
-	
+	*/
+	socket = io.connect(window.location.host);
 		socket.emit('get_holidays')
 		socket.on('sent_holidays', function(data) {
 			holidays = data
