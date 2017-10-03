@@ -26,8 +26,8 @@ module.exports = {
 			var mongo_url = 'mongodb://admin:qshIrs8mFvqq@' + mongo_ip + ':' + mongo_port + '/node'
 */
 		//var mongo_url = 'mongodb://user7IN:VmssRcvIjOY2lrcv@mongodb/roster_db'
-		//var mongo_url = 'mongodb://user7IN:VmssRcvIjOY2lrcv@mongodb/node'
-		var mongo_url = 'mongodb://admin:780GWkD50g0Uicp4@mongodb/node'
+		var mongo_url = 'mongodb://user7IN:VmssRcvIjOY2lrcv@mongodb/node'
+		//var mongo_url = 'mongodb://admin:780GWkD50g0Uicp4@mongodb/node'
 
 
 		
