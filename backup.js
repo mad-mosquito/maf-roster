@@ -1,6 +1,5 @@
 module.exports = {
 
-	//nothing
 
 	getBackup: function(mongo) {
 		self = this
