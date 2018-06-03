@@ -157,8 +157,7 @@ var SampleApp = function() {
 		self.app.use(express.compress());
 		
 		var auth = express.basicAuth(function(user,pass) {
-			if (user === 'pilot' && pass === 'mafna') return true
-			else if (user === 'laynha' && pass === 'laynha') return true
+			if (user === 'stephen' && pass === 'rostering') return true
 			else return false
 		});
 
